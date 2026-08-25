@@ -1,0 +1,15 @@
+{
+    "title": "ONYX TIERS \u2022 Evaluation Waitlist",
+    "color": 1118481,
+    "description": "Choose the kit you want to test below. Your selected kit is completely separate for every region.",
+    "fields": [
+        {
+            "name": "How it works",
+            "value": "Click a kit button, then enter your Minecraft username, region and preferred server."
+        },
+        {
+            "name": "Queue separation",
+            "value": "**EU-Vanilla** and **NA-Vanilla** are separate queues. The same applies to every kit."
+        }
+    ]
+}

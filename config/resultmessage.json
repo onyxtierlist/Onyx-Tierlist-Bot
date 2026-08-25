@@ -1,0 +1,37 @@
+{
+    "title": "ONYX TIERS \u2022 Test Result",
+    "color": 1118481,
+    "fields": [
+        {
+            "name": "Player",
+            "value": "{{PLAYER}}"
+        },
+        {
+            "name": "Tester",
+            "value": "{{TESTER}}"
+        },
+        {
+            "name": "Region",
+            "value": "{{REGION}}"
+        },
+        {
+            "name": "Kit",
+            "value": "{{KIT}}"
+        },
+        {
+            "name": "Minecraft Username",
+            "value": "{{USERNAME}}"
+        },
+        {
+            "name": "Previous Tier",
+            "value": "{{PREV_TIER}}"
+        },
+        {
+            "name": "New Tier",
+            "value": "{{NEW_TIER}}"
+        }
+    ],
+    "thumbnail": {
+        "url": "{{THUMBNAIL_URL}}"
+    }
+}

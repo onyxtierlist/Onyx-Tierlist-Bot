@@ -1,0 +1,122 @@
+# Onyx Tiers configuration
+# Restart the bot after changing this file.
+
+bot:
+    branding:
+        name: "ONYX TIERS"
+        color: 0x111111
+        footer: "ONYX TIERS • Minecraft PvP Testing"
+
+    options:
+        cooldown: 1440
+        queueLimit: 20
+        testerLimit: 5
+        reloadQueue: 30
+
+    # All kit buttons shown on the waitlist panel.
+    # Put your Discord custom emoji ID in emoji_id.
+    # Use 0 for no custom emoji.
+    kits:
+        sword:
+            queue_channel: 1541753184039739402
+            label: "Sword"
+            emoji_id: 1541021436469059654
+        axe:
+            queue_channel: 1538614492924215376
+            label: "Axe"
+            emoji_id: 1541018868359634994
+        vanilla:
+            queue_channel: 1538614484090753157
+            label: "Vanilla"
+            emoji_id: 1541018138987204608
+        uhc:
+            queue_channel: 1538614479946907748
+            label: "UHC"
+            emoji_id: 1541398867063345192
+        mace:
+            queue_channel: 1538614497248284813
+            label: "Mace"
+            emoji_id: 1541018886600794152
+        smp:
+            queue_channel: 1538614490109845556
+            label: "SMP"
+            emoji_id: 1541018169647431710
+        nethpot:
+            queue_channel: 1538614476503253092
+            label: "NethPot"
+            emoji_id: 1541018970637996052
+        pot:
+            queue_channel: 1538614473420705945
+            label: "Pot"
+            emoji_id: 1541018927729999984
+
+    messages:
+        noPermission: "You do not have permission to use this command."
+        notTicketCatagory: "This command can only be used inside a testing ticket."
+        resultMessageSent: "Result message sent!"
+        error: "An error occurred."
+        addToQueue: "You have been added to the queue!"
+        testerOpenQueue: "You have opened the queue!"
+        alreadyInQueue: "You are already in this queue!"
+        queueFull: "The queue is full!"
+        notInQueue: "You are not in this queue!"
+        leaveQueue: "You have left the queue!"
+
+    channels:
+        results: 1535957789925445647
+        enterWaitlist: 1535957790244347974
+
+    catagories:
+        highTests: 1535957790785540106
+
+    roles:
+        tester: 1535957789149765676
+
+    tiers:
+        lt5: 1541047243988017224
+        ht5: 1541047392072245351
+        lt4: 1541047473483685898
+        ht4: 1541047555608158278
+        lt3: 1541047641989976064
+        ht3: 1541047745517977660
+        lt2: 1541047825654222919
+        ht2: 1541047923494756413
+        lt1: 1541049269702754304
+        ht1: 1541049094682972251
+
+    highTiers:
+        - ht1
+        - lt1
+        - ht2
+        - lt2
+        - ht3
+
+    # Regions provide player roles and ticket categories.
+    # Queue channels are configured under each kit above.
+    regions:
+        EU:
+            queue_channel: 1541451526382293022
+            ticket_catagory: 1538614472325726340
+            role_ping: 1535957788654837787
+        NA:
+            queue_channel: 1541451306831708200
+            ticket_catagory: 1538614472325726340
+            role_ping: 1535957788654837786
+        AS-AU:
+            queue_channel: 1541451464575295571
+            ticket_catagory: 1538614472325726340
+            role_ping: 1535957788654837788
+        SA:
+            queue_channel: 1541451398397300846
+            ticket_catagory: 1538614472325726340
+            role_ping: 1535957788654837785
+
+database:
+    type: sqlite
+
+    mysql:
+        host: localhost
+        port: 3306
+        user: root
+        password: root
+        database: tiers

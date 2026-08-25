@@ -1,0 +1,7 @@
+2026-08-25 16:30:53,289:WARNING:nextcord.client: PyNaCl is not installed, voice will NOT be supported
+2026-08-25 16:30:53,291:ERROR:root: Setting up queue failed:
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tiers-region-kit-fixed\tier-test-bot-main\main.py", line 45, in <module>
+    queue.setup(listRegions, listKits)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: TierlistQueue.setup() takes 2 positional arguments but 3 were given

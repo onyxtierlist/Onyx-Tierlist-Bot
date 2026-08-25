@@ -1,0 +1,15 @@
+{
+    "title": "Tester(s) Available!",
+    "color": 1118481,
+    "description": "Queue updates automatically. This queue is for {{KIT}}.",
+    "fields": [
+        {
+            "name": "Queue ({{CAPACITY}})",
+            "value": "{{QUEUE}}"
+        },
+        {
+            "name": "Testers ({{TESTERCAPACITY}})",
+            "value": "{{TESTERS}}"
+        }
+    ]
+}

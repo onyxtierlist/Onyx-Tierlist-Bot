@@ -1,0 +1,47 @@
+2026-08-24 19:33:01,561:WARNING:nextcord.client: PyNaCl is not installed, voice will NOT be supported
+2026-08-24 19:33:01,597:INFO:nextcord.client: logging in using static token
+2026-08-24 19:33:01,809:INFO:nextcord.http: Allowed 1 rate limits to be garbage collected.
+2026-08-24 19:33:03,881:INFO:nextcord.gateway: Shard ID None has sent the IDENTIFY payload.
+2026-08-24 19:33:04,448:INFO:nextcord.gateway: Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-c-4257",{"micros":185359,"calls":["id_created",{"micros":709,"calls":[]},"session_lookup_time",{"micros":919,"calls":[]},"session_lookup_finished",{"micros":19,"calls":[]},"sessions-prd-gcp-us-east1-c-43",{"micros":183005,"calls":["start_session",{"micros":174268,"calls":["prd-rpc-56cdd54d49-l6p2b",{"micros":52240,"calls":["get_user",{"micros":17645},"get_guilds",{"micros":10456},"send_scheduled_deletion_message",{"micros":20},"guild_join_requests",{"micros":15},"authorized_ip_coro",{"micros":15},"pending_payments",{"micros":2283},"apex_experiments",{"micros":108072},"sessions_experiments",{"micros":8},"played_application_ids",{"micros":5},"linked_users",{"micros":14},"ad_personalization_toggles_disabled",{"micros":7},"regional_feature_config",{"micros":10}]}]},"starting_guild_connect",{"micros":35,"calls":[]},"lobbies_started",{"micros":0,"calls":[]},"presence_started",{"micros":371,"calls":[]},"guilds_started",{"micros":123,"calls":[]},"guilds_connect",{"micros":3,"calls":[]},"presence_connect",{"micros":8177,"calls":[]},"connect_finished",{"micros":8189,"calls":[]},"build_ready",{"micros":16,"calls":[]},"clean_ready",{"micros":2,"calls":[]},"optimize_ready",{"micros":1,"calls":[]},"split_ready",{"micros":0,"calls":[]}]}]}] (Session ID: 904ce25d04652cfc9ed464a0cfcd5bc0). Resume URL specified as wss://gateway-us-east1-c.discord.gg
+2026-08-24 19:33:05,288:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('openqueue', 1, None)
+2026-08-24 19:33:05,669:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('passeval', 1, None)
+2026-08-24 19:33:06,042:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('restrict', 1, None)
+2026-08-24 19:33:06,420:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('next', 1, None)
+2026-08-24 19:33:06,964:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('results', 1, None)
+2026-08-24 19:33:07,606:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('closequeue', 1, None)
+2026-08-24 19:33:08,746:ERROR:root: Failed bot startup sequence: 
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tiers-region-kit-fixed\tier-test-bot-main\main.py", line 66, in on_ready
+    await setupBot()
+  File "C:\Users\fire1\Downloads\onyx-tiers-region-kit-fixed\tier-test-bot-main\main.py", line 56, in setupBot
+    await channel.purge(limit=10, check=is_me)
+          ^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'purge'
+2026-08-24 19:33:08,759:INFO:nextcord.gateway: Websocket closed with 1000, cannot reconnect.
+2026-08-24 19:33:09,196:INFO:nextcord.client: Cleaning up after 3 tasks.
+2026-08-24 19:33:09,197:INFO:nextcord.client: All tasks finished cancelling.
+2026-08-24 19:33:09,197:INFO:nextcord.client: Closing the event loop.
+2026-08-24 19:33:09,641:ERROR:asyncio: Task exception was never retrieved
+future: <Task finished name='nextcord: on_ready' coro=<Client._run_event() done, defined at C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\site-packages\nextcord\client.py:519> exception=SystemExit('Failed startup sequence')>
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tiers-region-kit-fixed\tier-test-bot-main\main.py", line 66, in on_ready
+    await setupBot()
+  File "C:\Users\fire1\Downloads\onyx-tiers-region-kit-fixed\tier-test-bot-main\main.py", line 56, in setupBot
+    await channel.purge(limit=10, check=is_me)
+          ^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'purge'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tiers-region-kit-fixed\tier-test-bot-main\main.py", line 482, in <module>
+    bot.run(os.getenv("TOKEN"))
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\site-packages\nextcord\client.py", line 894, in run
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 713, in run_until_complete
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 684, in run_forever
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 2061, in _run_once
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py", line 89, in _run
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\site-packages\nextcord\client.py", line 527, in _run_event
+  File "C:\Users\fire1\Downloads\onyx-tiers-region-kit-fixed\tier-test-bot-main\main.py", line 70, in on_ready
+    sys.exit("Failed startup sequence")
+SystemExit: Failed startup sequence

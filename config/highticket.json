@@ -1,0 +1,21 @@
+{
+    "title": "ONYX TIERS \u2022 High Tier Test",
+    "color": 1118481,
+    "fields": [
+        {
+            "name": "Username",
+            "value": "{{USERNAME}}"
+        },
+        {
+            "name": "Tier",
+            "value": "{{TIER}}"
+        },
+        {
+            "name": "Kit",
+            "value": "{{KIT}}"
+        }
+    ],
+    "thumbnail": {
+        "url": "{{THUMBNAIL_URL}}"
+    }
+}

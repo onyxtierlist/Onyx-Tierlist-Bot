@@ -1,0 +1,31 @@
+2026-08-25 16:04:18,782:WARNING:nextcord.client: PyNaCl is not installed, voice will NOT be supported
+2026-08-25 16:04:18,785:INFO:nextcord.client: logging in using static token
+2026-08-25 16:04:18,801:INFO:nextcord.http: Allowed 1 rate limits to be garbage collected.
+2026-08-25 16:04:19,701:INFO:nextcord.gateway: Shard ID None has sent the IDENTIFY payload.
+2026-08-25 16:04:20,170:INFO:nextcord.gateway: Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-b-kk9z",{"micros":163568,"calls":["id_created",{"micros":846,"calls":[]},"session_lookup_time",{"micros":1745,"calls":[]},"session_lookup_finished",{"micros":10,"calls":[]},"sessions-prd-gcp-us-east1-b-94",{"micros":160372,"calls":["start_session",{"micros":143116,"calls":["prd-rpc-78bb7fbc98-v2q4r",{"micros":38895,"calls":["get_user",{"micros":7007},"get_guilds",{"micros":4972},"send_scheduled_deletion_message",{"micros":13},"guild_join_requests",{"micros":5},"authorized_ip_coro",{"micros":11},"pending_payments",{"micros":1894},"apex_experiments",{"micros":94347},"sessions_experiments",{"micros":9},"played_application_ids",{"micros":6},"linked_users",{"micros":26},"ad_personalization_toggles_disabled",{"micros":7},"regional_feature_config",{"micros":6}]}]},"starting_guild_connect",{"micros":55,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"presence_started",{"micros":376,"calls":[]},"guilds_started",{"micros":105,"calls":[]},"guilds_connect",{"micros":3,"calls":[]},"presence_connect",{"micros":16692,"calls":[]},"connect_finished",{"micros":16704,"calls":[]},"build_ready",{"micros":13,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":1,"calls":[]},"split_ready",{"micros":0,"calls":[]}]}]}] (Session ID: 4c1ad1017e31c6fab9262c5d6bc4b1d6). Resume URL specified as wss://gateway-us-east1-b.discord.gg
+2026-08-25 16:04:20,595:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('openqueue', 1, None)
+2026-08-25 16:04:20,963:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('passeval', 1, None)
+2026-08-25 16:04:21,449:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('restrict', 1, None)
+2026-08-25 16:04:21,818:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('next', 1, None)
+2026-08-25 16:04:22,175:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('results', 1, None)
+2026-08-25 16:04:22,533:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('info', 1, None)
+2026-08-25 16:04:41,398:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('forceclosetest', 1, None)
+2026-08-25 16:04:41,863:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('remove', 1, None)
+2026-08-25 16:04:42,231:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('updatetier', 1, None)
+2026-08-25 16:04:42,620:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('closequeue', 1, None)
+2026-08-25 16:04:43,028:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('unrestrict', 1, None)
+2026-08-25 16:04:54,406:ERROR:root: Error in /openqueue command:
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tiers-region-kit-fixed\tier-test-bot-main\main.py", line 198, in openqueue
+    await notify_queue_channel(queue_channel)
+          ^^^^^^^^^^^^^^^^^^^^
+NameError: name 'notify_queue_channel' is not defined
+2026-08-25 16:05:00,206:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('closetest', 1, None)
+2026-08-25 16:05:00,572:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('add', 1, None)
+2026-08-25 16:05:01,050:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('updateusername', 1, None)
+2026-08-25 16:05:04,944:ERROR:root: Error in /openqueue command:
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tiers-region-kit-fixed\tier-test-bot-main\main.py", line 198, in openqueue
+    await notify_queue_channel(queue_channel)
+          ^^^^^^^^^^^^^^^^^^^^
+NameError: name 'notify_queue_channel' is not defined

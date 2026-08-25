@@ -1,0 +1,19 @@
+2026-08-25 16:45:58,310:WARNING:nextcord.client: PyNaCl is not installed, voice will NOT be supported
+2026-08-25 16:45:58,311:INFO:nextcord.client: logging in using static token
+2026-08-25 16:45:58,318:INFO:nextcord.http: Allowed 1 rate limits to be garbage collected.
+2026-08-25 16:45:59,146:INFO:nextcord.gateway: Shard ID None has sent the IDENTIFY payload.
+2026-08-25 16:45:59,605:INFO:nextcord.gateway: Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-d-0t8m",{"micros":149093,"calls":["id_created",{"micros":590,"calls":[]},"session_lookup_time",{"micros":291,"calls":[]},"session_lookup_finished",{"micros":9,"calls":[]},"sessions-prd-gcp-us-east1-d-87",{"micros":146363,"calls":["start_session",{"micros":112600,"calls":["prd-rpc-78bb7fbc98-4qsms",{"micros":29035,"calls":["get_user",{"micros":5713},"get_guilds",{"micros":4871},"send_scheduled_deletion_message",{"micros":9},"guild_join_requests",{"micros":2},"authorized_ip_coro",{"micros":7},"pending_payments",{"micros":1121},"apex_experiments",{"micros":74284},"sessions_experiments",{"micros":7},"played_application_ids",{"micros":5},"linked_users",{"micros":5},"ad_personalization_toggles_disabled",{"micros":5},"regional_feature_config",{"micros":9}]}]},"starting_guild_connect",{"micros":38,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"presence_started",{"micros":307,"calls":[]},"guilds_started",{"micros":102,"calls":[]},"guilds_connect",{"micros":3,"calls":[]},"presence_connect",{"micros":33280,"calls":[]},"connect_finished",{"micros":33295,"calls":[]},"build_ready",{"micros":17,"calls":[]},"clean_ready",{"micros":2,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}] (Session ID: e9f4b91b72b08c3cc9d86b6a88aa8ac5). Resume URL specified as wss://gateway-us-east1-d.discord.gg
+2026-08-25 16:45:59,964:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('openqueue', 1, None)
+2026-08-25 16:46:00,345:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('passeval', 1, None)
+2026-08-25 16:46:00,698:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('restrict', 1, None)
+2026-08-25 16:46:01,091:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('next', 1, None)
+2026-08-25 16:46:01,458:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('results', 1, None)
+2026-08-25 16:46:18,923:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('info', 1, None)
+2026-08-25 16:46:19,306:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('forceclosetest', 1, None)
+2026-08-25 16:46:19,674:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('remove', 1, None)
+2026-08-25 16:46:20,038:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('updatetier', 1, None)
+2026-08-25 16:46:20,403:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('closequeue', 1, None)
+2026-08-25 16:46:39,277:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('unrestrict', 1, None)
+2026-08-25 16:46:39,651:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('closetest', 1, None)
+2026-08-25 16:46:40,146:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('add', 1, None)
+2026-08-25 16:46:40,527:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('updateusername', 1, None)

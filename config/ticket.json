@@ -1,0 +1,29 @@
+{
+    "title": "ONYX TIERS \u2022 Testing Ticket",
+    "color": 1118481,
+    "fields": [
+        {
+            "name": "Username",
+            "value": "{{USERNAME}}"
+        },
+        {
+            "name": "Tier",
+            "value": "{{TIER}}"
+        },
+        {
+            "name": "Region",
+            "value": "{{REGION}}"
+        },
+        {
+            "name": "Kit",
+            "value": "{{KIT}}"
+        },
+        {
+            "name": "Server",
+            "value": "{{SERVER}}"
+        }
+    ],
+    "thumbnail": {
+        "url": "{{THUMBNAIL_URL}}"
+    }
+}

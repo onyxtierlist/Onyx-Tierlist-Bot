@@ -1,0 +1,44 @@
+2026-08-24 19:49:50,147:WARNING:nextcord.client: PyNaCl is not installed, voice will NOT be supported
+2026-08-24 19:49:50,153:INFO:nextcord.client: logging in using static token
+2026-08-24 19:49:50,186:INFO:nextcord.http: Allowed 1 rate limits to be garbage collected.
+2026-08-24 19:49:52,210:INFO:nextcord.gateway: Shard ID None has sent the IDENTIFY payload.
+2026-08-24 19:49:52,713:INFO:nextcord.gateway: Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-b-tp0b",{"micros":194389,"calls":["id_created",{"micros":682,"calls":[]},"session_lookup_time",{"micros":262,"calls":[]},"session_lookup_finished",{"micros":11,"calls":[]},"sessions-prd-gcp-us-east1-b-73",{"micros":193080,"calls":["start_session",{"micros":173034,"calls":["prd-rpc-56cdd54d49-nhcvb",{"micros":67407,"calls":["get_user",{"micros":10622},"get_guilds",{"micros":5480},"send_scheduled_deletion_message",{"micros":9},"guild_join_requests",{"micros":3365},"authorized_ip_coro",{"micros":10},"pending_payments",{"micros":1372},"apex_experiments",{"micros":73671},"sessions_experiments",{"micros":5},"played_application_ids",{"micros":3},"linked_users",{"micros":3},"ad_personalization_toggles_disabled",{"micros":3},"regional_feature_config",{"micros":3}]}]},"starting_guild_connect",{"micros":34,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"presence_started",{"micros":2481,"calls":[]},"guilds_started",{"micros":123,"calls":[]},"guilds_connect",{"micros":3,"calls":[]},"presence_connect",{"micros":17381,"calls":[]},"connect_finished",{"micros":17394,"calls":[]},"build_ready",{"micros":11,"calls":[]},"clean_ready",{"micros":1,"calls":[]},"optimize_ready",{"micros":1,"calls":[]},"split_ready",{"micros":0,"calls":[]}]}]}] (Session ID: 040cf1f12a6df1d7d596391c24d7c88c). Resume URL specified as wss://gateway-us-east1-b.discord.gg
+2026-08-24 19:49:53,090:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('openqueue', 1, None)
+2026-08-24 19:49:53,463:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('passeval', 1, None)
+2026-08-24 19:49:53,864:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('restrict', 1, None)
+2026-08-24 19:49:54,231:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('next', 1, None)
+2026-08-24 19:49:54,638:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('results', 1, None)
+2026-08-24 19:49:55,003:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('info', 1, None)
+2026-08-24 19:50:14,224:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('forceclosetest', 1, None)
+2026-08-24 19:50:14,725:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('remove', 1, None)
+2026-08-24 19:50:16,038:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('updatetier', 1, None)
+2026-08-24 19:50:16,917:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('closequeue', 1, None)
+2026-08-24 19:50:17,488:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('unrestrict', 1, None)
+2026-08-24 19:50:33,627:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('closetest', 1, None)
+2026-08-24 19:50:34,209:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('add', 1, None)
+2026-08-24 19:50:34,866:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('updateusername', 1, None)
+2026-08-24 19:54:50,203:INFO:nextcord.http: Allowed 1 rate limits to be garbage collected.
+2026-08-24 20:01:26,129:ERROR:root: Error in /add command:
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tiers-region-kit-fixed\tier-test-bot-main\main.py", line 440, in add
+    if interaction.channel.category.id not in listRegionCategories: await interaction.response.send_message(messages["notTicketCatagory"], ephemeral=True); return
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'id'
+2026-08-24 20:02:11,953:ERROR:root: Error in /closetest command:
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tiers-region-kit-fixed\tier-test-bot-main\main.py", line 293, in closetest
+    if (interaction.channel.category.id not in listRegionCategories) or interaction.channel.id in listRegionQueueChannel: await interaction.response.send_message(content="You cannot use this command in this channel", ephemeral=True); return
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'id'
+2026-08-24 20:04:50,234:INFO:nextcord.http: Allowed 7 rate limits to be garbage collected.
+2026-08-24 20:05:55,597:ERROR:root: Error in /next command:
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tiers-region-kit-fixed\tier-test-bot-main\main.py", line 281, in next
+    await interaction.response.send_message(f"Ticket has been created: <#{channelID.id}>", ephemeral=True)
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\site-packages\nextcord\interactions.py", line 954, in send_message
+    await adapter.create_interaction_response(
+    ...<6 lines>...
+    )
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\site-packages\nextcord\webhook\async_.py", line 198, in request
+    raise NotFound(response, data)
+nextcord.errors.NotFound: 404 Not Found (error code: 10062): Unknown interaction

@@ -1,0 +1,49 @@
+2026-08-25 15:45:09,174:WARNING:nextcord.client: PyNaCl is not installed, voice will NOT be supported
+2026-08-25 15:45:09,175:INFO:nextcord.client: logging in using static token
+2026-08-25 15:45:09,183:INFO:nextcord.http: Allowed 1 rate limits to be garbage collected.
+2026-08-25 15:45:10,257:INFO:nextcord.gateway: Shard ID None has sent the IDENTIFY payload.
+2026-08-25 15:45:10,751:INFO:nextcord.gateway: Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-c-dlsm",{"micros":160246,"calls":["id_created",{"micros":1049,"calls":[]},"session_lookup_time",{"micros":273,"calls":[]},"session_lookup_finished",{"micros":10,"calls":[]},"sessions-prd-gcp-us-east1-c-87",{"micros":157690,"calls":["start_session",{"micros":122161,"calls":["prd-rpc-78bb7fbc98-ccdp8",{"micros":40020,"calls":["get_user",{"micros":6933},"get_guilds",{"micros":5447},"send_scheduled_deletion_message",{"micros":13},"guild_join_requests",{"micros":9},"authorized_ip_coro",{"micros":12},"pending_payments",{"micros":1399},"apex_experiments",{"micros":72742},"sessions_experiments",{"micros":6},"played_application_ids",{"micros":5},"linked_users",{"micros":4},"ad_personalization_toggles_disabled",{"micros":3},"regional_feature_config",{"micros":3}]}]},"starting_guild_connect",{"micros":35,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"presence_started",{"micros":391,"calls":[]},"guilds_started",{"micros":77,"calls":[]},"guilds_connect",{"micros":2,"calls":[]},"presence_connect",{"micros":34989,"calls":[]},"connect_finished",{"micros":35002,"calls":[]},"build_ready",{"micros":20,"calls":[]},"clean_ready",{"micros":2,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}] (Session ID: b855e9d286bbabb11a46725f220c8498). Resume URL specified as wss://gateway-us-east1-c.discord.gg
+2026-08-25 15:45:11,136:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('openqueue', 1, None)
+2026-08-25 15:45:11,508:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('passeval', 1, None)
+2026-08-25 15:45:11,880:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('restrict', 1, None)
+2026-08-25 15:45:12,247:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('next', 1, None)
+2026-08-25 15:45:12,619:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('results', 1, None)
+2026-08-25 15:45:12,992:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('info', 1, None)
+2026-08-25 15:45:14,160:ERROR:root: Failed bot startup sequence: 
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tiers-region-kit-fixed\tier-test-bot-main\main.py", line 81, in on_ready
+    await setupBot()
+  File "C:\Users\fire1\Downloads\onyx-tiers-region-kit-fixed\tier-test-bot-main\main.py", line 67, in setupBot
+    raise RuntimeError(
+    ...<2 lines>...
+    )
+RuntimeError: Configured queue channel 1538614486972506143 for kit sword was not found. Replace the placeholder queue_channel in config/config.yml with a valid text-channel ID.
+2026-08-25 15:45:14,164:INFO:nextcord.gateway: Websocket closed with 1000, cannot reconnect.
+2026-08-25 15:45:14,607:INFO:nextcord.client: Cleaning up after 4 tasks.
+2026-08-25 15:45:14,607:INFO:nextcord.client: All tasks finished cancelling.
+2026-08-25 15:45:14,608:INFO:nextcord.client: Closing the event loop.
+2026-08-25 15:45:14,649:ERROR:asyncio: Task exception was never retrieved
+future: <Task finished name='nextcord: on_ready' coro=<Client._run_event() done, defined at C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\site-packages\nextcord\client.py:519> exception=SystemExit('Failed startup sequence')>
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tiers-region-kit-fixed\tier-test-bot-main\main.py", line 81, in on_ready
+    await setupBot()
+  File "C:\Users\fire1\Downloads\onyx-tiers-region-kit-fixed\tier-test-bot-main\main.py", line 67, in setupBot
+    raise RuntimeError(
+    ...<2 lines>...
+    )
+RuntimeError: Configured queue channel 1538614486972506143 for kit sword was not found. Replace the placeholder queue_channel in config/config.yml with a valid text-channel ID.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tiers-region-kit-fixed\tier-test-bot-main\main.py", line 482, in <module>
+    bot.run(os.getenv("TOKEN"))
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\site-packages\nextcord\client.py", line 894, in run
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 713, in run_until_complete
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 684, in run_forever
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 2061, in _run_once
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py", line 89, in _run
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\site-packages\nextcord\client.py", line 527, in _run_event
+  File "C:\Users\fire1\Downloads\onyx-tiers-region-kit-fixed\tier-test-bot-main\main.py", line 85, in on_ready
+    sys.exit("Failed startup sequence")
+SystemExit: Failed startup sequence

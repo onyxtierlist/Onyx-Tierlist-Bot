@@ -1,0 +1,20 @@
+2026-08-25 16:56:22,702:WARNING:nextcord.client: PyNaCl is not installed, voice will NOT be supported
+2026-08-25 16:56:22,704:INFO:nextcord.client: logging in using static token
+2026-08-25 16:56:22,712:INFO:nextcord.http: Allowed 1 rate limits to be garbage collected.
+2026-08-25 16:56:23,579:INFO:nextcord.gateway: Shard ID None has sent the IDENTIFY payload.
+2026-08-25 16:56:24,208:INFO:nextcord.gateway: Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-c-xjm9",{"micros":321731,"calls":["id_created",{"micros":783,"calls":[]},"session_lookup_time",{"micros":248,"calls":[]},"session_lookup_finished",{"micros":14,"calls":[]},"sessions-prd-gcp-us-east1-c-73",{"micros":320395,"calls":["start_session",{"micros":281234,"calls":["prd-rpc-78bb7fbc98-6qfbh",{"micros":163409,"calls":["get_user",{"micros":25506},"get_guilds",{"micros":15892},"send_scheduled_deletion_message",{"micros":14},"guild_join_requests",{"micros":958},"authorized_ip_coro",{"micros":10},"pending_payments",{"micros":2230},"apex_experiments",{"micros":93651},"sessions_experiments",{"micros":14},"played_application_ids",{"micros":6},"linked_users",{"micros":7},"ad_personalization_toggles_disabled",{"micros":5},"regional_feature_config",{"micros":9}]}]},"starting_guild_connect",{"micros":34,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"presence_started",{"micros":2304,"calls":[]},"guilds_started",{"micros":79,"calls":[]},"guilds_connect",{"micros":3,"calls":[]},"presence_connect",{"micros":36716,"calls":[]},"connect_finished",{"micros":36728,"calls":[]},"build_ready",{"micros":12,"calls":[]},"clean_ready",{"micros":2,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}] (Session ID: 012829f600efbb070defcdc0ac271dc0). Resume URL specified as wss://gateway-us-east1-c.discord.gg
+2026-08-25 16:56:24,597:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('openqueue', 1, None)
+2026-08-25 16:56:24,992:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('passeval', 1, None)
+2026-08-25 16:56:25,375:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('restrict', 1, None)
+2026-08-25 16:56:25,743:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('next', 1, None)
+2026-08-25 16:56:26,140:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('results', 1, None)
+2026-08-25 16:56:26,539:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('info', 1, None)
+2026-08-25 16:56:45,383:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('forceclosetest', 1, None)
+2026-08-25 16:56:45,745:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('remove', 1, None)
+2026-08-25 16:56:46,105:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('updatetier', 1, None)
+2026-08-25 16:56:46,462:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('closequeue', 1, None)
+2026-08-25 16:56:46,852:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('unrestrict', 1, None)
+2026-08-25 16:57:05,840:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('closetest', 1, None)
+2026-08-25 16:57:06,234:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('add', 1, None)
+2026-08-25 16:57:06,605:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('updateusername', 1, None)
+2026-08-25 16:57:09,737:WARNING:nextcord.http: Path ('GET', '1541753184039739402:None:/channels/{channel_id}/messages/{message_id}', 'Bot MTU0MDMw[redacted]') resulted in error 404, check your path?

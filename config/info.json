@@ -1,0 +1,37 @@
+{
+    "title": "ONYX TIERS \u2022 Player Info",
+    "color": 1118481,
+    "fields": [
+        {
+            "name": "Discord",
+            "value": "{{DISCORDUSER}}"
+        },
+        {
+            "name": "Username",
+            "value": "{{USERNAME}}"
+        },
+        {
+            "name": "Tier",
+            "value": "{{TIER}}"
+        },
+        {
+            "name": "Region",
+            "value": "{{REGION}}"
+        },
+        {
+            "name": "Kit",
+            "value": "{{KIT}}"
+        },
+        {
+            "name": "Last Test",
+            "value": "{{LAST}}"
+        },
+        {
+            "name": "Restricted",
+            "value": "{{RESTRICTED}}"
+        }
+    ],
+    "thumbnail": {
+        "url": "{{THUMBNAIL_URL}}"
+    }
+}
