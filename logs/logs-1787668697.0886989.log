@@ -1,0 +1,48 @@
+2026-08-25 20:08:17,099:WARNING:nextcord.client: PyNaCl is not installed, voice will NOT be supported
+2026-08-25 20:08:17,101:INFO:nextcord.client: logging in using static token
+2026-08-25 20:08:17,119:INFO:nextcord.http: Allowed 1 rate limits to be garbage collected.
+2026-08-25 20:08:18,041:INFO:nextcord.gateway: Shard ID None has sent the IDENTIFY payload.
+2026-08-25 20:08:18,546:INFO:nextcord.gateway: Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-b-8kfn",{"micros":194647,"calls":["id_created",{"micros":1230,"calls":[]},"session_lookup_time",{"micros":209,"calls":[]},"session_lookup_finished",{"micros":11,"calls":[]},"sessions-prd-gcp-us-east1-b-74",{"micros":192855,"calls":["start_session",{"micros":188452,"calls":["prd-rpc-78bb7fbc98-sn2tm",{"micros":108179,"calls":["get_user",{"micros":9886},"get_guilds",{"micros":11575},"send_scheduled_deletion_message",{"micros":12},"guild_join_requests",{"micros":1549},"authorized_ip_coro",{"micros":13},"pending_payments",{"micros":1444},"apex_experiments",{"micros":65979},"sessions_experiments",{"micros":6},"played_application_ids",{"micros":4},"linked_users",{"micros":3},"ad_personalization_toggles_disabled",{"micros":3},"regional_feature_config",{"micros":2}]}]},"starting_guild_connect",{"micros":69,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"presence_started",{"micros":410,"calls":[]},"guilds_started",{"micros":94,"calls":[]},"guilds_connect",{"micros":3,"calls":[]},"presence_connect",{"micros":3803,"calls":[]},"connect_finished",{"micros":3815,"calls":[]},"build_ready",{"micros":12,"calls":[]},"clean_ready",{"micros":2,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":0,"calls":[]}]}]}] (Session ID: 21ca5f215b9513ef205d80d409b585bc). Resume URL specified as wss://gateway-us-east1-b.discord.gg
+2026-08-25 20:08:18,946:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('openqueue', 1, None)
+2026-08-25 20:08:19,354:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('passeval', 1, None)
+2026-08-25 20:08:19,734:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('restrict', 1, None)
+2026-08-25 20:08:20,192:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('next', 1, None)
+2026-08-25 20:08:20,589:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('results', 1, None)
+2026-08-25 20:08:20,964:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('info', 1, None)
+2026-08-25 20:08:39,716:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('forceclosetest', 1, None)
+2026-08-25 20:08:40,094:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('remove', 1, None)
+2026-08-25 20:08:40,454:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('updatetier', 1, None)
+2026-08-25 20:08:40,827:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('closequeue', 1, None)
+2026-08-25 20:08:41,219:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('unrestrict', 1, None)
+2026-08-25 20:09:00,705:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('closetest', 1, None)
+2026-08-25 20:09:01,071:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('add', 1, None)
+2026-08-25 20:09:01,434:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('updateusername', 1, None)
+2026-08-25 20:09:01,820:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('waitlist', 1, None)
+2026-08-25 20:09:24,086:WARNING:nextcord.http: Path ('GET', '1538614492924215376:None:/channels/{channel_id}/messages/{message_id}', 'Bot MTU0MDMw[redacted]') resulted in error 404, check your path?
+2026-08-25 20:09:24,089:ERROR:root: Error in /closequeue command:
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tierlist-bot\tier-test-bot-main\main.py", line 306, in closequeue
+    queue_message = await queue_channel.fetch_message(message_id)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\site-packages\nextcord\abc.py", line 1649, in fetch_message
+    data = await self._state.http.get_message(channel.id, id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\site-packages\nextcord\http.py", line 911, in request
+    should_retry = await self._handle_http_response_errors(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+    )
+    ^
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\site-packages\nextcord\http.py", line 1046, in _handle_http_response_errors
+    raise NotFound(response, return_value)
+nextcord.errors.NotFound: 404 Not Found (error code: 10008): Unknown Message
+2026-08-25 20:09:35,197:WARNING:nextcord.http: Path ('GET', '1538614492924215376:None:/channels/{channel_id}/messages/{message_id}', 'Bot MTU0MDMw[redacted]') resulted in error 404, check your path?
+2026-08-25 20:09:35,198:WARNING:root: Queue message for kit axe was deleted. Creating a replacement.
+2026-08-25 20:12:23,441:ERROR:root: Error in /next command:
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tierlist-bot\tier-test-bot-main\main.py", line 365, in next
+    region = user_data[5]
+             ~~~~~~~~~^^^
+IndexError: tuple index out of range
+2026-08-25 20:13:17,152:INFO:nextcord.http: Allowed 1 rate limits to be garbage collected.
+2026-08-25 20:23:17,197:INFO:nextcord.http: Allowed 30 rate limits to be garbage collected.

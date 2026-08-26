@@ -1,0 +1,69 @@
+2026-08-26 15:00:49,616:WARNING:nextcord.client: PyNaCl is not installed, voice will NOT be supported
+2026-08-26 15:00:49,618:INFO:nextcord.client: logging in using static token
+2026-08-26 15:00:49,629:INFO:nextcord.http: Allowed 1 rate limits to be garbage collected.
+2026-08-26 15:00:50,551:INFO:nextcord.gateway: Shard ID None has sent the IDENTIFY payload.
+2026-08-26 15:00:51,050:INFO:nextcord.gateway: Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-b-fr3q",{"micros":192971,"calls":["id_created",{"micros":565,"calls":[]},"session_lookup_time",{"micros":330,"calls":[]},"session_lookup_finished",{"micros":14,"calls":[]},"sessions-prd-gcp-us-east1-b-93",{"micros":191659,"calls":["start_session",{"micros":189454,"calls":["prd-rpc-775bfcf779-z7w2r",{"micros":77038,"calls":["get_user",{"micros":13016},"get_guilds",{"micros":10308},"send_scheduled_deletion_message",{"micros":29},"guild_join_requests",{"micros":1337},"authorized_ip_coro",{"micros":16},"pending_payments",{"micros":2394},"apex_experiments",{"micros":101588},"sessions_experiments",{"micros":7},"played_application_ids",{"micros":4},"linked_users",{"micros":8},"ad_personalization_toggles_disabled",{"micros":3},"regional_feature_config",{"micros":3}]}]},"starting_guild_connect",{"micros":66,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"presence_started",{"micros":420,"calls":[]},"guilds_started",{"micros":109,"calls":[]},"guilds_connect",{"micros":3,"calls":[]},"presence_connect",{"micros":1550,"calls":[]},"connect_finished",{"micros":1562,"calls":[]},"build_ready",{"micros":44,"calls":[]},"clean_ready",{"micros":2,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}] (Session ID: 346362288826219c496cc2a046da8e75). Resume URL specified as wss://gateway-us-east1-b.discord.gg
+2026-08-26 15:00:51,461:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('openqueue', 1, None)
+2026-08-26 15:00:51,835:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('passeval', 1, None)
+2026-08-26 15:00:52,192:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('restrict', 1, None)
+2026-08-26 15:00:52,564:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('next', 1, None)
+2026-08-26 15:00:52,950:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('results', 1, None)
+2026-08-26 15:00:53,325:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('info', 1, None)
+2026-08-26 15:01:12,203:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('forceclosetest', 1, None)
+2026-08-26 15:01:12,563:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('remove', 1, None)
+2026-08-26 15:01:12,930:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('updatetier', 1, None)
+2026-08-26 15:01:13,303:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('closequeue', 1, None)
+2026-08-26 15:01:13,671:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('unrestrict', 1, None)
+2026-08-26 15:01:32,654:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('closetest', 1, None)
+2026-08-26 15:01:33,019:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('add', 1, None)
+2026-08-26 15:01:33,403:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('updateusername', 1, None)
+2026-08-26 15:01:33,776:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('waitlist', 1, None)
+2026-08-26 15:08:02,446:INFO:nextcord.gateway: Timed out receiving packet. Attempting a reconnect.
+2026-08-26 15:08:02,447:INFO:nextcord.client: Got a request to RESUME the websocket.
+2026-08-26 15:08:03,270:INFO:nextcord.http: Allowed 1 rate limits to be garbage collected.
+2026-08-26 15:08:04,605:INFO:nextcord.gateway: Shard ID None has sent the RESUME payload.
+2026-08-26 15:08:04,934:INFO:nextcord.gateway: Shard ID None session has been invalidated.
+2026-08-26 15:08:05,272:INFO:nextcord.client: Got a request to IDENTIFY the websocket.
+2026-08-26 15:08:10,840:INFO:nextcord.gateway: Shard ID None has sent the IDENTIFY payload.
+2026-08-26 15:08:11,589:INFO:nextcord.gateway: Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-d-q07z",{"micros":408051,"calls":["id_created",{"micros":763,"calls":[]},"session_lookup_time",{"micros":3325,"calls":[]},"session_lookup_finished",{"micros":9,"calls":[]},"sessions-prd-gcp-us-east1-d-50",{"micros":401097,"calls":["start_session",{"micros":348105,"calls":["prd-rpc-775bfcf779-4qrvd",{"micros":195588,"calls":["get_user",{"micros":6795},"get_guilds",{"micros":11432},"send_scheduled_deletion_message",{"micros":16},"guild_join_requests",{"micros":5},"authorized_ip_coro",{"micros":15},"pending_payments",{"micros":9638},"apex_experiments",{"micros":128545},"sessions_experiments",{"micros":12},"played_application_ids",{"micros":8},"linked_users",{"micros":7},"ad_personalization_toggles_disabled",{"micros":7},"regional_feature_config",{"micros":7}]}]},"starting_guild_connect",{"micros":34,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"presence_started",{"micros":390,"calls":[]},"guilds_started",{"micros":110,"calls":[]},"guilds_connect",{"micros":4,"calls":[]},"presence_connect",{"micros":52383,"calls":[]},"connect_finished",{"micros":52394,"calls":[]},"build_ready",{"micros":59,"calls":[]},"clean_ready",{"micros":3,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":0,"calls":[]}]}]}] (Session ID: 05f641170975135a9e1dec6b6e855c60). Resume URL specified as wss://gateway-us-east1-d.discord.gg
+2026-08-26 15:08:12,085:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('openqueue', 1, None)
+2026-08-26 15:08:12,476:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('passeval', 1, None)
+2026-08-26 15:08:12,887:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('restrict', 1, None)
+2026-08-26 15:08:13,257:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('next', 1, None)
+2026-08-26 15:08:13,618:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('results', 1, None)
+2026-08-26 15:08:13,982:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('info', 1, None)
+2026-08-26 15:08:28,158:ERROR:root: Failed bot startup sequence: 
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tierlist-bot\tier-test-bot-main\main.py", line 140, in on_ready
+    updateQueue.start()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\site-packages\nextcord\ext\tasks\__init__.py", line 307, in start
+    raise RuntimeError("Task is already launched and is not completed.")
+RuntimeError: Task is already launched and is not completed.
+2026-08-26 15:08:28,209:INFO:nextcord.gateway: Websocket closed with 1000, cannot reconnect.
+2026-08-26 15:08:28,642:INFO:nextcord.client: Cleaning up after 5 tasks.
+2026-08-26 15:08:28,643:INFO:nextcord.client: All tasks finished cancelling.
+2026-08-26 15:08:28,643:INFO:nextcord.client: Closing the event loop.
+2026-08-26 15:08:28,827:ERROR:asyncio: Task exception was never retrieved
+future: <Task finished name='nextcord: on_ready' coro=<Client._run_event() done, defined at C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\site-packages\nextcord\client.py:519> exception=SystemExit('Failed startup sequence')>
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tierlist-bot\tier-test-bot-main\main.py", line 140, in on_ready
+    updateQueue.start()
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\site-packages\nextcord\ext\tasks\__init__.py", line 307, in start
+    raise RuntimeError("Task is already launched and is not completed.")
+RuntimeError: Task is already launched and is not completed.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tierlist-bot\tier-test-bot-main\main.py", line 697, in <module>
+    bot.run(os.getenv("TOKEN"))
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\site-packages\nextcord\client.py", line 894, in run
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 713, in run_until_complete
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 684, in run_forever
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 2061, in _run_once
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py", line 89, in _run
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\site-packages\nextcord\client.py", line 527, in _run_event
+  File "C:\Users\fire1\Downloads\onyx-tierlist-bot\tier-test-bot-main\main.py", line 143, in on_ready
+    sys.exit("Failed startup sequence")
+SystemExit: Failed startup sequence

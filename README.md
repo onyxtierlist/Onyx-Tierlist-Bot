@@ -58,9 +58,12 @@ pip install -r requirements.txt
    - category IDs
    - tester role ID
    - tier role IDs
+    - optional per-kit `tier_roles` IDs for gamemode-specific tier roles
+    - optional per-kit `ticket_category` IDs for gamemode-specific ticket categories
    - region role IDs
     - kit queue channels
    - kit emoji IDs
+    - one `waitlist_role` ID for each kit, or `0` to disable that role
 6. Start the bot:
 
 ```bash
@@ -71,6 +74,7 @@ python main.py
 
 Tester queue commands now take a kit:
 
+- `/waitlist kit:<kit>`
 - `/openqueue kit:<kit>`
 - `/closequeue kit:<kit>`
 - `/next kit:<kit>`
@@ -78,6 +82,32 @@ Tester queue commands now take a kit:
 - `/closetest`
 - `/forceclosetest`
 - `/passeval`
+
+Players are stored separately for each kit. `/results` requires the kit being graded,
+removes that kit's `waitlist_role`, and keeps results for other kits intact. The bot
+needs Manage Roles, and its role must be above the configured waitlist and tier roles.
+
+To give each gamemode its own tier roles, add a `tier_roles` mapping inside each kit
+in `config/config.yml`, using the same tier names as `bot.tiers`:
+
+```yaml
+kits:
+    sword:
+        tier_roles:
+            lt5: 123456789012345678
+            ht5: 123456789012345679
+    axe:
+        tier_roles:
+            lt5: 223456789012345678
+            ht5: 223456789012345679
+```
+
+Any tier omitted from a kit mapping is not assigned. Kits without `tier_roles` use
+the legacy global `bot.tiers` mapping.
+
+Regular tickets use the region category when `ticket_category` is `0` or omitted.
+Set `ticket_category` inside a kit to place that gamemode's tickets in a specific
+Discord category. High-tier tickets continue to use `catagories.highTests`.
 
 ## Database migration
 

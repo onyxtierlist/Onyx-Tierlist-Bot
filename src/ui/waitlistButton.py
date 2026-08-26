@@ -35,7 +35,12 @@ class WaitlistButton(ui.View):
                     await interaction.response.send_message("You are currently restricted.", ephemeral=True)
                     return
 
-                lastTest = (await databaseManager.getLastTest(interaction.user.id))[0]
+                kit_data = await databaseManager.getUserTicket(interaction.user.id, kit)
+                if kit_data is None:
+                    await interaction.response.send_modal(WaitlistForm(kit))
+                    return
+
+                lastTest = (await databaseManager.getLastTest(interaction.user.id, kit))[0]
                 if int(datetime.datetime.now().timestamp()) - lastTest <= int(
                     __import__("src.utils.loadConfig", fromlist=["cooldown"]).cooldown
                 ) * 60:
@@ -45,7 +50,7 @@ class WaitlistButton(ui.View):
                     )
                     return
 
-                current_tier = (await databaseManager.getTier(interaction.user.id))[0]
+                current_tier = (await databaseManager.getTier(interaction.user.id, kit))[0]
                 if current_tier in listHighTiers:
                     categoryChannel = interaction.guild.get_channel(catagories["highTests"])
                     channelID = await interaction.guild.create_text_channel(
@@ -54,7 +59,7 @@ class WaitlistButton(ui.View):
                     )
                     overwrite = nextcord.PermissionOverwrite(view_channel=True, send_messages=True)
                     await channelID.set_permissions(interaction.user, overwrite=overwrite)
-                    messageData = await databaseManager.getUserTicket(interaction.user.id)
+                    messageData = await databaseManager.getUserTicket(interaction.user.id, kit)
                     ticketMessage = format.formathighticketmessage(
                         username=messageData[0], tier=messageData[1],
                         kit=messageData[4], uuid=messageData[3]
@@ -96,15 +101,13 @@ class WaitlistForm(ui.Modal):
 
     async def callback(self, interaction: nextcord.Interaction):
         try:
+            await interaction.response.defer(ephemeral=True)
             uuid = await getuserid(self.ign.value.strip())
-            if uuid == "8667ba71b85a4004af54457a9734eed7":
-                await interaction.response.send_message("Minecraft username does not exist.", ephemeral=True)
-                return
 
             region_lookup = {name.lower(): name for name in listRegions}
             region = region_lookup.get(self.region.value.strip().lower())
             if region is None:
-                await interaction.response.send_message(
+                await interaction.followup.send(
                     f"Invalid region. Choose one of: {', '.join(listRegions)}",
                     ephemeral=True
                 )
@@ -121,6 +124,11 @@ class WaitlistForm(ui.Modal):
                 kit=self.kit
             )
 
+            waitlist_role_id = int(listKits[self.kit].get("waitlist_role", 0) or 0)
+            waitlist_role = interaction.guild.get_role(waitlist_role_id) if waitlist_role_id else None
+            if waitlist_role is not None:
+                await interaction.user.add_roles(waitlist_role, reason=f"Entered {self.kit} waitlist")
+
             current_roles = interaction.user.roles
             region_role_ids = [r["role_ping"] for r in listRegions.values()]
             role_ids_to_remove = [role.id for role in current_roles if role.id in region_role_ids]
@@ -131,7 +139,7 @@ class WaitlistForm(ui.Modal):
 
             role = interaction.guild.get_role(listRegions[region]["role_ping"])
             if role is None:
-                await interaction.response.send_message(
+                await interaction.followup.send(
                     "Bot is not configured correctly: region role not found.",
                     ephemeral=True
                 )
@@ -139,10 +147,10 @@ class WaitlistForm(ui.Modal):
             await interaction.user.add_roles(role)
 
             queue_key = self.kit
-            await interaction.response.send_message(
+            await interaction.followup.send(
                 f"You are registered for **{listKits[self.kit].get('label', self.kit.title())}** in **{region}**. "
                 f"Queue: `{queue_key}` • <#{listKits[self.kit]['queue_channel']}>",
                 ephemeral=True
             )
         except Exception:
-            await interaction.response.send_message(messages["error"], ephemeral=True)
+            await interaction.followup.send(messages["error"], ephemeral=True)

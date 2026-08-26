@@ -1,0 +1,54 @@
+2026-08-25 20:27:11,671:WARNING:nextcord.client: PyNaCl is not installed, voice will NOT be supported
+2026-08-25 20:27:11,674:INFO:nextcord.client: logging in using static token
+2026-08-25 20:27:11,687:INFO:nextcord.http: Allowed 1 rate limits to be garbage collected.
+2026-08-25 20:27:12,650:INFO:nextcord.gateway: Shard ID None has sent the IDENTIFY payload.
+2026-08-25 20:27:13,129:INFO:nextcord.gateway: Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-b-2wwk",{"micros":172823,"calls":["id_created",{"micros":1070,"calls":[]},"session_lookup_time",{"micros":282,"calls":[]},"session_lookup_finished",{"micros":11,"calls":[]},"sessions-prd-gcp-us-east1-b-58",{"micros":171131,"calls":["start_session",{"micros":129197,"calls":["prd-rpc-78bb7fbc98-5hjjh",{"micros":45825,"calls":["get_user",{"micros":8197},"get_guilds",{"micros":6559},"send_scheduled_deletion_message",{"micros":15},"guild_join_requests",{"micros":5},"authorized_ip_coro",{"micros":11},"pending_payments",{"micros":1585},"apex_experiments",{"micros":72759},"sessions_experiments",{"micros":22},"played_application_ids",{"micros":4},"linked_users",{"micros":2},"ad_personalization_toggles_disabled",{"micros":2},"regional_feature_config",{"micros":2}]}]},"starting_guild_connect",{"micros":54,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"presence_started",{"micros":8271,"calls":[]},"guilds_started",{"micros":88,"calls":[]},"guilds_connect",{"micros":3,"calls":[]},"presence_connect",{"micros":33490,"calls":[]},"connect_finished",{"micros":33505,"calls":[]},"build_ready",{"micros":12,"calls":[]},"clean_ready",{"micros":2,"calls":[]},"optimize_ready",{"micros":1,"calls":[]},"split_ready",{"micros":0,"calls":[]}]}]}] (Session ID: 422f3c2c6343add5e419544a6a2031b1). Resume URL specified as wss://gateway-us-east1-b.discord.gg
+2026-08-25 20:27:13,529:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('openqueue', 1, None)
+2026-08-25 20:27:13,891:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('passeval', 1, None)
+2026-08-25 20:27:14,252:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('restrict', 1, None)
+2026-08-25 20:27:14,606:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('next', 1, None)
+2026-08-25 20:27:14,975:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('results', 1, None)
+2026-08-25 20:27:15,670:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('info', 1, None)
+2026-08-25 20:27:34,577:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('forceclosetest', 1, None)
+2026-08-25 20:27:34,962:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('remove', 1, None)
+2026-08-25 20:27:35,353:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('updatetier', 1, None)
+2026-08-25 20:27:35,898:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('closequeue', 1, None)
+2026-08-25 20:27:36,269:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('unrestrict', 1, None)
+2026-08-25 20:27:53,592:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('closetest', 1, None)
+2026-08-25 20:27:53,998:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('add', 1, None)
+2026-08-25 20:27:54,378:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('updateusername', 1, None)
+2026-08-25 20:27:54,768:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('waitlist', 1, None)
+2026-08-25 20:30:28,463:WARNING:nextcord.http: Path ('GET', '1538614492924215376:None:/channels/{channel_id}/messages/{message_id}', 'Bot MTU0MDMw[redacted]') resulted in error 404, check your path?
+2026-08-25 20:30:28,466:WARNING:root: Queue message for kit axe was deleted. Creating a replacement.
+2026-08-25 20:32:10,314:ERROR:root: Error in /next command:
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tierlist-bot\tier-test-bot-main\main.py", line 383, in next
+    region = user_data[5]
+             ~~~~~~~~~^^^
+TypeError: 'NoneType' object is not subscriptable
+2026-08-25 20:32:11,692:INFO:nextcord.http: Allowed 1 rate limits to be garbage collected.
+2026-08-25 20:33:26,659:ERROR:root: Error in /results command:
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tierlist-bot\tier-test-bot-main\main.py", line 200, in results
+    username, oldtier, saved_kit = await databaseManager.getResultInfo(user.id, kit)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 3)
+2026-08-25 20:33:41,746:ERROR:root: Error in /next command:
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tierlist-bot\tier-test-bot-main\main.py", line 383, in next
+    region = user_data[5]
+             ~~~~~~~~~^^^
+IndexError: tuple index out of range
+2026-08-25 20:35:48,778:ERROR:root: Error in /results command:
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tierlist-bot\tier-test-bot-main\main.py", line 200, in results
+    username, oldtier, saved_kit = await databaseManager.getResultInfo(user.id, kit)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 3)
+2026-08-25 20:36:05,281:ERROR:root: Error in /results command:
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tierlist-bot\tier-test-bot-main\main.py", line 200, in results
+    username, oldtier, saved_kit = await databaseManager.getResultInfo(user.id, kit)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: too many values to unpack (expected 3)
+2026-08-25 20:42:11,784:INFO:nextcord.http: Allowed 31 rate limits to be garbage collected.

@@ -1,0 +1,23 @@
+2026-08-25 20:48:57,067:WARNING:nextcord.client: PyNaCl is not installed, voice will NOT be supported
+2026-08-25 20:48:57,073:INFO:nextcord.client: logging in using static token
+2026-08-25 20:48:57,093:INFO:nextcord.http: Allowed 1 rate limits to be garbage collected.
+2026-08-25 20:48:58,034:INFO:nextcord.gateway: Shard ID None has sent the IDENTIFY payload.
+2026-08-25 20:48:58,740:INFO:nextcord.gateway: Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-d-gs33",{"micros":397469,"calls":["id_created",{"micros":1250,"calls":[]},"session_lookup_time",{"micros":2542,"calls":[]},"session_lookup_finished",{"micros":10,"calls":[]},"sessions-prd-gcp-us-east1-d-9",{"micros":393242,"calls":["start_session",{"micros":365141,"calls":["prd-rpc-78bb7fbc98-rz5gw",{"micros":171647,"calls":["get_user",{"micros":10385},"get_guilds",{"micros":9539},"send_scheduled_deletion_message",{"micros":17},"guild_join_requests",{"micros":6},"authorized_ip_coro",{"micros":17},"pending_payments",{"micros":13763},"apex_experiments",{"micros":168675},"sessions_experiments",{"micros":10},"played_application_ids",{"micros":8},"linked_users",{"micros":14},"ad_personalization_toggles_disabled",{"micros":6},"regional_feature_config",{"micros":5}]}]},"starting_guild_connect",{"micros":28,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"presence_started",{"micros":1500,"calls":[]},"guilds_started",{"micros":79,"calls":[]},"guilds_connect",{"micros":2,"calls":[]},"presence_connect",{"micros":26466,"calls":[]},"connect_finished",{"micros":26477,"calls":[]},"build_ready",{"micros":13,"calls":[]},"clean_ready",{"micros":2,"calls":[]},"optimize_ready",{"micros":1,"calls":[]},"split_ready",{"micros":0,"calls":[]}]}]}] (Session ID: 140c77adc3360c56501012820b1ab6e5). Resume URL specified as wss://gateway-us-east1-d.discord.gg
+2026-08-25 20:48:59,168:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('openqueue', 1, None)
+2026-08-25 20:48:59,528:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('passeval', 1, None)
+2026-08-25 20:48:59,920:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('restrict', 1, None)
+2026-08-25 20:49:00,314:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('next', 1, None)
+2026-08-25 20:49:00,691:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('results', 1, None)
+2026-08-25 20:49:01,074:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('info', 1, None)
+2026-08-25 20:49:19,933:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('forceclosetest', 1, None)
+2026-08-25 20:49:20,311:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('remove', 1, None)
+2026-08-25 20:49:20,761:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('updatetier', 1, None)
+2026-08-25 20:49:21,210:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('closequeue', 1, None)
+2026-08-25 20:49:21,572:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('unrestrict', 1, None)
+2026-08-25 20:49:38,808:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('closetest', 1, None)
+2026-08-25 20:49:39,230:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('add', 1, None)
+2026-08-25 20:49:39,613:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('updateusername', 1, None)
+2026-08-25 20:49:40,073:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('waitlist', 1, None)
+2026-08-25 20:49:45,449:WARNING:nextcord.http: Path ('GET', '1538614492924215376:None:/channels/{channel_id}/messages/{message_id}', 'Bot MTU0MDMw[redacted]') resulted in error 404, check your path?
+2026-08-25 20:49:45,450:WARNING:root: Queue message for kit axe was deleted. Creating a replacement.
+2026-08-25 20:53:57,103:INFO:nextcord.http: Allowed 1 rate limits to be garbage collected.

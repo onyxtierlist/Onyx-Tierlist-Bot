@@ -26,7 +26,8 @@ def formatresult(discordUsername, testerID, region, kit, minecraftUsername, oldT
     text = json.dumps(data)
     replacements = {
         "{{PLAYER}}": discordUsername, "{{TESTER}}": f"<@{testerID}>",
-        "{{REGION}}": region, "{{KIT}}": listKits[kit].get("label", kit.title()),
+        "{{REGION}}": region, "{[REGION]}": region,
+        "{{KIT}}": listKits[kit].get("label", kit.title()),
         "{{USERNAME}}": minecraftUsername, "{{PREV_TIER}}": oldTier,
         "{{NEW_TIER}}": newTier, "{{THUMBNAIL_URL}}": f"https://render.crafty.gg/3d/bust/{uuid}"
     }

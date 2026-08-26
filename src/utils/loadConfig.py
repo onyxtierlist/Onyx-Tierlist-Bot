@@ -25,11 +25,20 @@ try:
 
     listRegionCategories = [region["ticket_catagory"] for region in listRegions.values()]
     listRegionCategories.append(catagories["highTests"])
+    listRegionCategories.extend(
+        kit["ticket_category"]
+        for kit in listKits.values()
+        if kit.get("ticket_category")
+    )
     listKitQueueChannel = [kit["queue_channel"] for kit in listKits.values()]
     listRegionRolePing = [region["role_ping"] for region in listRegions.values()]
 
     testerRole = botConfig["roles"]["tester"]
     listTierRoles = dict(botConfig["tiers"])
+    listKitTierRoles = {
+        kit: dict(kit_data.get("tier_roles") or listTierRoles)
+        for kit, kit_data in listKits.items()
+    }
     messages = botConfig["messages"]
     channels = botConfig["channels"]
 

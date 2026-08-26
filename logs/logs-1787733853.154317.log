@@ -1,0 +1,74 @@
+2026-08-26 14:14:13,161:WARNING:nextcord.client: PyNaCl is not installed, voice will NOT be supported
+2026-08-26 14:14:13,164:INFO:nextcord.client: logging in using static token
+2026-08-26 14:14:13,228:INFO:nextcord.http: Allowed 1 rate limits to be garbage collected.
+2026-08-26 14:14:14,138:INFO:nextcord.gateway: Shard ID None has sent the IDENTIFY payload.
+2026-08-26 14:14:18,089:INFO:nextcord.gateway: Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-d-gc5z",{"micros":3649252,"calls":["id_created",{"micros":534,"calls":[]},"session_lookup_time",{"micros":298,"calls":[]},"session_lookup_finished",{"micros":9,"calls":[]},"sessions-prd-gcp-us-east1-d-33",{"micros":3647960,"calls":["start_session",{"micros":3635977,"calls":["prd-rpc-775bfcf779-5ct6x",{"micros":3030538,"calls":["get_user",{"micros":88687},"get_guilds",{"micros":133842},"send_scheduled_deletion_message",{"micros":26},"guild_join_requests",{"micros":8},"authorized_ip_coro",{"micros":17},"pending_payments",{"micros":37752},"apex_experiments",{"micros":532490},"sessions_experiments",{"micros":14},"played_application_ids",{"micros":8},"linked_users",{"micros":7},"ad_personalization_toggles_disabled",{"micros":6},"regional_feature_config",{"micros":7}]}]},"starting_guild_connect",{"micros":48,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"presence_started",{"micros":337,"calls":[]},"guilds_started",{"micros":76,"calls":[]},"guilds_connect",{"micros":2,"calls":[]},"presence_connect",{"micros":11463,"calls":[]},"connect_finished",{"micros":11474,"calls":[]},"build_ready",{"micros":14,"calls":[]},"clean_ready",{"micros":3,"calls":[]},"optimize_ready",{"micros":29,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}] (Session ID: 22d04c7065a8c7026d10425b8d71db74). Resume URL specified as wss://gateway-us-east1-d.discord.gg
+2026-08-26 14:14:18,484:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('openqueue', 1, None)
+2026-08-26 14:14:18,875:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('passeval', 1, None)
+2026-08-26 14:14:19,323:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('restrict', 1, None)
+2026-08-26 14:14:19,679:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('next', 1, None)
+2026-08-26 14:14:20,057:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('results', 1, None)
+2026-08-26 14:14:20,486:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('info', 1, None)
+2026-08-26 14:14:39,281:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('forceclosetest', 1, None)
+2026-08-26 14:14:39,692:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('remove', 1, None)
+2026-08-26 14:14:40,059:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('updatetier', 1, None)
+2026-08-26 14:14:40,453:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('closequeue', 1, None)
+2026-08-26 14:14:40,851:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('unrestrict', 1, None)
+2026-08-26 14:14:59,747:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('closetest', 1, None)
+2026-08-26 14:15:00,123:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('add', 1, None)
+2026-08-26 14:15:00,528:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('updateusername', 1, None)
+2026-08-26 14:15:00,890:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('waitlist', 1, None)
+2026-08-26 14:16:03,331:WARNING:nextcord.http: Path ('GET', '1541753184039739402:None:/channels/{channel_id}/messages/{message_id}', 'Bot MTU0MDMw[redacted]') resulted in error 404, check your path?
+2026-08-26 14:16:03,331:WARNING:root: Queue message for kit sword was deleted. Creating a replacement.
+2026-08-26 14:19:13,244:INFO:nextcord.http: Allowed 1 rate limits to be garbage collected.
+2026-08-26 14:29:13,276:INFO:nextcord.http: Allowed 24 rate limits to be garbage collected.
+2026-08-26 14:34:13,319:INFO:nextcord.http: Allowed 11 rate limits to be garbage collected.
+2026-08-26 14:51:36,378:INFO:nextcord.gateway: Timed out receiving packet. Attempting a reconnect.
+2026-08-26 14:51:36,389:INFO:nextcord.client: Got a request to RESUME the websocket.
+2026-08-26 14:51:36,676:INFO:nextcord.http: Allowed 2 rate limits to be garbage collected.
+2026-08-26 14:51:37,890:INFO:nextcord.gateway: Shard ID None has sent the RESUME payload.
+2026-08-26 14:51:38,209:INFO:nextcord.gateway: Shard ID None session has been invalidated.
+2026-08-26 14:51:38,518:INFO:nextcord.client: Got a request to IDENTIFY the websocket.
+2026-08-26 14:51:44,288:INFO:nextcord.gateway: Shard ID None has sent the IDENTIFY payload.
+2026-08-26 14:51:44,856:INFO:nextcord.gateway: Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-c-0smk",{"micros":261604,"calls":["id_created",{"micros":1120,"calls":[]},"session_lookup_time",{"micros":2867,"calls":[]},"session_lookup_finished",{"micros":13,"calls":[]},"sessions-prd-gcp-us-east1-c-60",{"micros":257256,"calls":["start_session",{"micros":214212,"calls":["prd-rpc-775bfcf779-ndmw2",{"micros":80539,"calls":["get_user",{"micros":9966},"get_guilds",{"micros":7906},"send_scheduled_deletion_message",{"micros":33},"guild_join_requests",{"micros":33006},"authorized_ip_coro",{"micros":17},"pending_payments",{"micros":2164},"apex_experiments",{"micros":119016},"sessions_experiments",{"micros":11},"played_application_ids",{"micros":7},"linked_users",{"micros":5},"ad_personalization_toggles_disabled",{"micros":5},"regional_feature_config",{"micros":7}]}]},"starting_guild_connect",{"micros":37,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"presence_started",{"micros":31580,"calls":[]},"guilds_started",{"micros":106,"calls":[]},"guilds_connect",{"micros":3,"calls":[]},"presence_connect",{"micros":11201,"calls":[]},"connect_finished",{"micros":11280,"calls":[]},"build_ready",{"micros":24,"calls":[]},"clean_ready",{"micros":3,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":0,"calls":[]}]}]}] (Session ID: 5d13e97578bd7daa9754c5f45878dfa7). Resume URL specified as wss://gateway-us-east1-c.discord.gg
+2026-08-26 14:51:45,411:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('openqueue', 1, None)
+2026-08-26 14:51:45,783:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('passeval', 1, None)
+2026-08-26 14:51:46,172:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('restrict', 1, None)
+2026-08-26 14:51:46,578:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('next', 1, None)
+2026-08-26 14:51:46,944:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('results', 1, None)
+2026-08-26 14:51:47,342:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('info', 1, None)
+2026-08-26 14:52:01,131:ERROR:root: Failed bot startup sequence: 
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tierlist-bot\tier-test-bot-main\main.py", line 115, in on_ready
+    updateQueue.start()
+    ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\site-packages\nextcord\ext\tasks\__init__.py", line 307, in start
+    raise RuntimeError("Task is already launched and is not completed.")
+RuntimeError: Task is already launched and is not completed.
+2026-08-26 14:52:01,356:INFO:nextcord.gateway: Websocket closed with 1000, cannot reconnect.
+2026-08-26 14:52:01,774:INFO:nextcord.client: Cleaning up after 6 tasks.
+2026-08-26 14:52:01,779:INFO:nextcord.client: All tasks finished cancelling.
+2026-08-26 14:52:01,779:INFO:nextcord.client: Closing the event loop.
+2026-08-26 14:52:02,093:ERROR:asyncio: Task exception was never retrieved
+future: <Task finished name='nextcord: on_ready' coro=<Client._run_event() done, defined at C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\site-packages\nextcord\client.py:519> exception=SystemExit('Failed startup sequence')>
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tierlist-bot\tier-test-bot-main\main.py", line 115, in on_ready
+    updateQueue.start()
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\site-packages\nextcord\ext\tasks\__init__.py", line 307, in start
+    raise RuntimeError("Task is already launched and is not completed.")
+RuntimeError: Task is already launched and is not completed.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tierlist-bot\tier-test-bot-main\main.py", line 662, in <module>
+    bot.run(os.getenv("TOKEN"))
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\site-packages\nextcord\client.py", line 894, in run
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 713, in run_until_complete
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 684, in run_forever
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 2061, in _run_once
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py", line 89, in _run
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\site-packages\nextcord\client.py", line 527, in _run_event
+  File "C:\Users\fire1\Downloads\onyx-tierlist-bot\tier-test-bot-main\main.py", line 118, in on_ready
+    sys.exit("Failed startup sequence")
+SystemExit: Failed startup sequence

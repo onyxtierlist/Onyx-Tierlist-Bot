@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 
 from src.utils import mojang, format
 from src.tierlistQueue import TierlistQueue
-from src.ui.waitlistButton import WaitlistButton
+from src.ui.waitlistButton import WaitlistButton, WaitlistForm
 from src.ui.enterQueueButton import EnterQueueButton
 from src.ui.closeTicketButton import CloseTicketButton
 from src.database import databaseManager
@@ -38,6 +38,7 @@ load_dotenv()
 
 intents = nextcord.Intents.all()
 bot = commands.Bot(intents=intents)
+queue_message_lock = asyncio.Lock()
 
 
 try:
@@ -62,6 +63,30 @@ async def notify_queue(channel, embed_data):
         embed=nextcord.Embed.from_dict(embed_data),
         allowed_mentions=nextcord.AllowedMentions(everyone=True),
     )
+
+async def refresh_queue_message(queue_key):
+    """Replace the active queue message immediately after a queue mutation."""
+    async with queue_message_lock:
+        data = queue.getqueueraw()[queue_key]
+        channel = bot.get_channel(data["queueChannel"])
+        if channel is None:
+            raise RuntimeError(f"Queue channel for kit '{queue_key}' was not found.")
+
+        old_message_id = data["queueMessage"]
+        if old_message_id is not None:
+            try:
+                old_message = await channel.fetch_message(old_message_id)
+                await old_message.delete(reason="Queue updated")
+            except nextcord.NotFound:
+                pass
+
+        queue_message = await channel.send(
+            content="@here",
+            embed=nextcord.Embed.from_dict(queue.makeQueueMessage(queue_key)),
+            view=EnterQueueButton(queue, refresh_queue_message),
+            allowed_mentions=nextcord.AllowedMentions(everyone=True),
+        )
+        queue.addQueueMessageId(queue_key, queue_message.id)
 
 async def setupBot():
     await databaseManager.createTables()
@@ -93,6 +118,18 @@ async def setupBot():
         await channel.send(
             embed=nextcord.Embed.from_dict(format.formatnoqueue())
         )
+
+
+@bot.slash_command(name="waitlist", description="joins the evaluation waitlist")
+async def waitlist(
+    interaction: nextcord.Interaction,
+    kit: str = nextcord.SlashOption(
+        description="Choose the kit you want to test",
+        required=True,
+        choices=listKitsText,
+    ),
+):
+    await interaction.response.send_modal(WaitlistForm(kit))
     
     
 @bot.event
@@ -136,7 +173,7 @@ async def updateQueue():
 
             replacement = await channel.send(
                 embed=nextcord.Embed.from_dict(embed_data),
-                view=EnterQueueButton(queue),
+                view=EnterQueueButton(queue, refresh_queue_message),
             )
 
             queue.addQueueMessageId(queue_key, replacement.id)
@@ -166,48 +203,75 @@ async def results(
         description="Enter their new tier",
         required=True,
         choices=listTiers
+    ),
+    kit: str = nextcord.SlashOption(
+        description="Choose the kit the result is for",
+        required=True,
+        choices=listKitsText,
     )
     ):
     try:
-        if testerRole not in [role.id for role in interaction.user.roles]: await interaction.response.send_message(messages["noPermission"], ephemeral=True); return
+        await interaction.response.defer(ephemeral=True)
+        if testerRole not in [role.id for role in interaction.user.roles]: await interaction.followup.send(messages["noPermission"], ephemeral=True); return
         
         exists = await databaseManager.userExists(user.id)
-        if not exists: await interaction.response.send_message("User does not exist in the database", ephemeral=True); return
+        if not exists: await interaction.followup.send("User does not exist in the database", ephemeral=True); return
         
         isrestricted = await databaseManager.isRestriced(interaction.user.id)
-        if isrestricted: await interaction.response.send_message(content="User is currently restricted", ephemeral=True); return
+        if isrestricted: await interaction.followup.send(content="User is currently restricted", ephemeral=True); return
 
         restricted = await databaseManager.isRestriced(user.id)
-        if restricted: await interaction.response.send_message("User is restricted", ephemeral=True); return
+        if restricted: await interaction.followup.send("User is restricted", ephemeral=True); return
 
-        username, oldtier, kit = await databaseManager.getResultInfo(user.id)
+        username, oldtier, region, saved_kit = await databaseManager.getResultInfo(user.id, kit)
+        if username is None:
+            await interaction.followup.send(
+                f"That user is not registered for the {kit} waitlist.", ephemeral=True
+            )
+            return
 
         uuid = await mojang.getuserid(username=username)
 
-        result_embed_data = format.formatresult(discordUsername=user.name, testerID=interaction.user.id, kit=kit, minecraftUsername=username, oldTier=oldtier, newTier=newtier, uuid=uuid) # such bad practice <3
+        result_embed_data = format.formatresult(discordUsername=user.name, testerID=interaction.user.id, region=region, kit=saved_kit, minecraftUsername=username, oldTier=oldtier, newTier=newtier, uuid=uuid)
         embed = nextcord.Embed.from_dict(result_embed_data)
 
-        await databaseManager.addResult(discordID=user.id, tier=newtier)
+        await databaseManager.addResult(discordID=user.id, kit=kit, tier=newtier)
 
         member = interaction.guild.get_member(user.id)
+        if member is None:
+            raise RuntimeError(f"User {user.id} is not in the server.")
+
+        waitlist_role_id = int(listKits[kit].get("waitlist_role", 0) or 0)
+        waitlist_role = interaction.guild.get_role(waitlist_role_id) if waitlist_role_id else None
+        if waitlist_role and waitlist_role in member.roles:
+            await member.remove_roles(waitlist_role, reason=f"{kit} result recorded")
+
         region_roles_to_remove = [role for role in member.roles if role.id in listRegionRolePing]
         if region_roles_to_remove:
             await member.remove_roles(*region_roles_to_remove, reason="Region roles removed by /results command")
 
-        tier_roles_to_remove = [role for role in member.roles if role.id in listTierRoles.values()]
+        configured_tier_role_ids = set(listTierRoles.values())
+        for kit_tier_roles in listKitTierRoles.values():
+            configured_tier_role_ids.update(
+                role_id for role_id in kit_tier_roles.values() if role_id
+            )
+        tier_roles_to_remove = [
+            role for role in member.roles if role.id in configured_tier_role_ids
+        ]
         if tier_roles_to_remove:
             await member.remove_roles(*tier_roles_to_remove, reason="Old tier roles removed by /results command")
         
-        if newtier != "none" and newtier in listTierRoles:
-            new_tier_role = interaction.guild.get_role(listTierRoles[newtier])
+        kit_tier_roles = listKitTierRoles.get(kit, {})
+        if newtier != "none" and newtier in kit_tier_roles:
+            new_tier_role = interaction.guild.get_role(kit_tier_roles[newtier])
             if new_tier_role:
                 await member.add_roles(new_tier_role, reason="New tier role added by /results command")
 
         await bot.get_channel(channels["results"]).send(content=f"<@{user.id}>" ,embed=embed)
-        await interaction.response.send_message(content=messages["resultMessageSent"], ephemeral=True)
+        await interaction.followup.send(content=messages["resultMessageSent"], ephemeral=True)
     except Exception as e:
         logging.exception("Error in /results command:")
-        await interaction.response.send_message(content=messages["error"], ephemeral=True)
+        await interaction.followup.send(content=messages["error"], ephemeral=True)
 
 @bot.slash_command(name="openqueue", description="opens a kit queue")
 async def openqueue(
@@ -219,8 +283,9 @@ async def openqueue(
     ),
 ):
     try:
+        await interaction.response.defer(ephemeral=True)
         if testerRole not in [role.id for role in interaction.user.roles]:
-            await interaction.response.send_message(
+            await interaction.followup.send(
                 messages["noPermission"], ephemeral=True
             )
             return
@@ -228,7 +293,7 @@ async def openqueue(
         response = queue.addTester(kit=kit, userID=interaction.user.id)
 
         if response[1] == "":
-            await interaction.response.send_message(
+            await interaction.followup.send(
                 content=response[0], ephemeral=True
             )
             return
@@ -239,21 +304,30 @@ async def openqueue(
         if queue_channel is None:
             raise RuntimeError(f"Queue channel for kit '{kit}' was not found.")
 
+        previous_message_id = queue_data["queueMessage"]
+        if previous_message_id is not None:
+            try:
+                previous_message = await queue_channel.fetch_message(previous_message_id)
+                await previous_message.delete(reason="Queue reopened")
+            except nextcord.NotFound:
+                pass
+            queue.addQueueMessageId(kit, None)
+
         queue_message = await queue_channel.send(
             content="@here",
             embed=nextcord.Embed.from_dict(response[1]),
-            view=EnterQueueButton(queue),
+            view=EnterQueueButton(queue, refresh_queue_message),
             allowed_mentions=nextcord.AllowedMentions(everyone=True),
         )
         queue.addQueueMessageId(kit, queue_message.id)
 
-        await interaction.response.send_message(
+        await interaction.followup.send(
             content=response[0], ephemeral=True
         )
 
     except Exception:
         logging.exception("Error in /openqueue command:")
-        await interaction.response.send_message(
+        await interaction.followup.send(
             content=messages["error"], ephemeral=True
         )
 
@@ -267,8 +341,9 @@ async def closequeue(
     ),
 ):
     try:
+        await interaction.response.defer(ephemeral=True)
         if testerRole not in [role.id for role in interaction.user.roles]:
-            await interaction.response.send_message(
+            await interaction.followup.send(
                 messages["noPermission"], ephemeral=True
             )
             return
@@ -279,7 +354,7 @@ async def closequeue(
         )
 
         if response == "Testing is closed":
-            await interaction.response.send_message(
+            await interaction.followup.send(
                 content=response, ephemeral=True
             )
             return
@@ -291,25 +366,30 @@ async def closequeue(
             raise RuntimeError(f"Queue channel for kit '{kit}' was not found.")
 
         if message_id is not None:
-            queue_message = await queue_channel.fetch_message(message_id)
-            await queue_message.edit(
-                embed=nextcord.Embed.from_dict(embed_data),
-                view=None if message_text == "testing has closed" else EnterQueueButton(queue),
-            )
+            try:
+                queue_message = await queue_channel.fetch_message(message_id)
+                await queue_message.delete(reason="Queue updated")
+            except nextcord.NotFound:
+                pass
 
-        await queue_channel.send(
+        replacement = await queue_channel.send(
             content="@here",
             embed=nextcord.Embed.from_dict(embed_data),
+            view=None if message_text == "testing has closed" else EnterQueueButton(queue, refresh_queue_message),
             allowed_mentions=nextcord.AllowedMentions(everyone=True),
         )
+        if message_text == "testing has closed":
+            queue.addQueueMessageId(kit, None)
+        else:
+            queue.addQueueMessageId(kit, replacement.id)
 
-        await interaction.response.send_message(
+        await interaction.followup.send(
             content=message_text, ephemeral=True
         )
 
     except Exception:
         logging.exception("Error in /closequeue command:")
-        await interaction.response.send_message(
+        await interaction.followup.send(
             content=messages["error"], ephemeral=True
         )
 
@@ -323,8 +403,9 @@ async def next(
     ),
 ):
     try:
+        await interaction.response.defer(ephemeral=True)
         if testerRole not in [role.id for role in interaction.user.roles]:
-            await interaction.response.send_message(
+            await interaction.followup.send(
                 messages["noPermission"], ephemeral=True
             )
             return
@@ -332,7 +413,7 @@ async def next(
         queue_data = queue.getqueueraw()[kit]
 
         if interaction.user.id not in queue_data["testers"]:
-            await interaction.response.send_message(
+            await interaction.followup.send(
                 "You are not testing this queue.", ephemeral=True
             )
             return
@@ -343,17 +424,27 @@ async def next(
         )
 
         if user_result[0] is None:
-            await interaction.response.send_message(
+            await interaction.followup.send(
                 content=user_result[1], ephemeral=True
             )
             return
 
         user = await interaction.guild.fetch_member(user_result[0])
-        user_data = await databaseManager.getUserTicket(user.id)
+        user_data = await databaseManager.getUserTicket(user.id, kit)
+        if user_data is None:
+            await interaction.followup.send(
+                f"That user is not registered for the {kit} waitlist.", ephemeral=True
+            )
+            return
         region = user_data[5]
 
-        category_id = listRegions[region]["ticket_catagory"]
+        category_id = int(
+            listKits[kit].get("ticket_category", 0)
+            or listRegions[region]["ticket_catagory"]
+        )
         category = interaction.guild.get_channel(category_id)
+        if category is None:
+            raise RuntimeError(f"Ticket category {category_id} was not found.")
 
         channel = await interaction.guild.create_text_channel(
             name=f"eval-{region}-{kit}-{user.name}",
@@ -381,14 +472,14 @@ async def next(
             embed=nextcord.Embed.from_dict(ticket_message),
         )
 
-        await interaction.response.send_message(
+        await interaction.followup.send(
             f"Ticket has been created: <#{channel.id}>",
             ephemeral=True,
         )
 
     except Exception:
         logging.exception("Error in /next command:")
-        await interaction.response.send_message(
+        await interaction.followup.send(
             content=messages["error"], ephemeral=True
         )
 
@@ -398,7 +489,7 @@ async def closetest(
     ):
     try:
         if testerRole not in [role.id for role in interaction.user.roles]: await interaction.response.send_message(messages["noPermission"], ephemeral=True); return
-        if (interaction.channel.category.id not in listRegionCategories) or interaction.channel.id in listQueueChannel: await interaction.response.send_message(content="You cannot use this command in this channel", ephemeral=True); return
+        if interaction.channel.category is None or interaction.channel.category.id not in listRegionCategories or interaction.channel.id in listQueueChannel: await interaction.response.send_message(content="You cannot use this command in this channel", ephemeral=True); return
         
         view = CloseTicketButton()
 
@@ -416,7 +507,7 @@ async def forceclosetest(
     ):
     try:
         if testerRole not in [role.id for role in interaction.user.roles]: await interaction.response.send_message(messages["noPermission"], ephemeral=True); return
-        if (interaction.channel.category.id not in listRegionCategories) or interaction.channel.id in listQueueChannel: await interaction.response.send_message(content="You cannot use this command in this channel", ephemeral=True); return
+        if interaction.channel.category is None or interaction.channel.category.id not in listRegionCategories or interaction.channel.id in listQueueChannel: await interaction.response.send_message(content="You cannot use this command in this channel", ephemeral=True); return
 
         await interaction.response.send_message("Ticket will be closed in 10 seconds, cannot cancel")
         await asyncio.sleep(10)
@@ -435,6 +526,11 @@ async def updateusername(
     username: str = nextcord.SlashOption(
         description="Enter their minecraft username",
         required=True,
+    ),
+    kit: str = nextcord.SlashOption(
+        description="Choose the kit to update",
+        required=True,
+        choices=listKitsText,
     )
     ):
     try:
@@ -444,7 +540,7 @@ async def updateusername(
 
         uuid = await mojang.getuserid(username=username)
         if uuid == "8667ba71b85a4004af54457a9734eed7": await interaction.response.send_message(content="Minecraft user does not exist"); return
-        await databaseManager.updateUsername(discordID=user.id, username=username, uuid=uuid)
+        await databaseManager.updateUsername(discordID=user.id, kit=kit, username=username, uuid=uuid)
         await interaction.response.send_message(content="Username sucessfully updated", ephemeral=True)
     except Exception as e:
         logging.exception("Error in /updateusername command:")
@@ -462,6 +558,11 @@ async def updatetier(
         description="Enter their tier",
         required=True,
         choices=listTiers
+    ),
+    kit: str = nextcord.SlashOption(
+        description="Choose the kit to update",
+        required=True,
+        choices=listKitsText,
     )
     ):
     try:
@@ -469,7 +570,7 @@ async def updatetier(
         exists = await databaseManager.userExists(user.id)
         if not exists: await interaction.response.send_message("User does not exist in the database", ephemeral=True); return
 
-        await databaseManager.updateTier(discordID=user.id, tier=tier)
+        await databaseManager.updateTier(discordID=user.id, kit=kit, tier=tier)
         await interaction.response.send_message(content="Tier sucessfully updated in database, you will need to change their roles", ephemeral=True)
     except Exception as e: 
         logging.exception("Error in /updatetier command:")
@@ -545,7 +646,7 @@ async def add(
     ):
     try:
         if testerRole not in [role.id for role in interaction.user.roles]: await interaction.response.send_message(content=messages["noPermission"], ephemeral=True); return
-        if interaction.channel.category.id not in listRegionCategories: await interaction.response.send_message(messages["notTicketCatagory"], ephemeral=True); return
+        if interaction.channel.category is None or interaction.channel.category.id not in listRegionCategories: await interaction.response.send_message(messages["notTicketCatagory"], ephemeral=True); return
 
         channel = interaction.channel
         overwrite = nextcord.PermissionOverwrite()
@@ -568,7 +669,7 @@ async def remove(
     ):
     try:
         if testerRole not in [role.id for role in interaction.user.roles]: await interaction.response.send_message(content=messages["noPermission"], ephemeral=True); return
-        if interaction.channel.category.id not in listRegionCategories: await interaction.response.send_message(messages["notTicketCatagory"], ephemeral=True); return
+        if interaction.channel.category is None or interaction.channel.category.id not in listRegionCategories: await interaction.response.send_message(messages["notTicketCatagory"], ephemeral=True); return
         
         channel = interaction.channel
         overwrite = nextcord.PermissionOverwrite()
@@ -591,7 +692,7 @@ async def passeval(
     ):
     try:
         if testerRole not in [role.id for role in interaction.user.roles]: await interaction.response.send_message(content=messages["noPermission"], ephemeral=True); return
-        if interaction.channel.category.id not in listRegionCategories or interaction.channel.id in listQueueChannel: await interaction.response.send_message(content="You cannot use this command in this channel", ephemeral=True); return
+        if interaction.channel.category is None or interaction.channel.category.id not in listRegionCategories or interaction.channel.id in listQueueChannel: await interaction.response.send_message(content="You cannot use this command in this channel", ephemeral=True); return
         
         channel = interaction.channel
         await channel.edit(name=f"passeval-{user.name}")

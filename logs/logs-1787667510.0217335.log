@@ -1,0 +1,49 @@
+2026-08-25 19:48:30,037:WARNING:nextcord.client: PyNaCl is not installed, voice will NOT be supported
+2026-08-25 19:48:30,040:INFO:nextcord.client: logging in using static token
+2026-08-25 19:48:30,061:INFO:nextcord.http: Allowed 1 rate limits to be garbage collected.
+2026-08-25 19:48:31,047:INFO:nextcord.gateway: Shard ID None has sent the IDENTIFY payload.
+2026-08-25 19:48:31,540:INFO:nextcord.gateway: Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-d-z8z6",{"micros":194397,"calls":["id_created",{"micros":701,"calls":[]},"session_lookup_time",{"micros":5486,"calls":[]},"session_lookup_finished",{"micros":11,"calls":[]},"sessions-prd-gcp-us-east1-d-13",{"micros":183950,"calls":["start_session",{"micros":153002,"calls":["prd-rpc-78bb7fbc98-v2q4r",{"micros":38579,"calls":["get_user",{"micros":12234},"get_guilds",{"micros":6894},"send_scheduled_deletion_message",{"micros":15},"guild_join_requests",{"micros":5},"authorized_ip_coro",{"micros":18},"pending_payments",{"micros":1916},"apex_experiments",{"micros":102176},"sessions_experiments",{"micros":8},"played_application_ids",{"micros":60},"linked_users",{"micros":7},"ad_personalization_toggles_disabled",{"micros":5},"regional_feature_config",{"micros":4}]}]},"starting_guild_connect",{"micros":66,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"presence_started",{"micros":18463,"calls":[]},"guilds_started",{"micros":2,"calls":[]},"guilds_connect",{"micros":3,"calls":[]},"presence_connect",{"micros":12392,"calls":[]},"connect_finished",{"micros":12404,"calls":[]},"build_ready",{"micros":9,"calls":[]},"clean_ready",{"micros":2,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}] (Session ID: 8d3d303b6d93f42b5642a74492faf178). Resume URL specified as wss://gateway-us-east1-d.discord.gg
+2026-08-25 19:48:31,928:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('openqueue', 1, None)
+2026-08-25 19:48:32,297:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('passeval', 1, None)
+2026-08-25 19:48:32,665:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('restrict', 1, None)
+2026-08-25 19:48:33,046:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('next', 1, None)
+2026-08-25 19:48:33,414:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('results', 1, None)
+2026-08-25 19:48:33,579:ERROR:root: Failed bot startup sequence: 
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tierlist-bot\tier-test-bot-main\main.py", line 114, in on_ready
+    await setupBot()
+  File "C:\Users\fire1\Downloads\onyx-tierlist-bot\tier-test-bot-main\main.py", line 71, in setupBot
+    raise RuntimeError(
+    ...<2 lines>...
+    )
+RuntimeError: Configured waitlist channel 1535957790244347974 was not found. Check config/config.yml and the bot's server access.
+2026-08-25 19:48:33,583:INFO:nextcord.gateway: Websocket closed with 1000, cannot reconnect.
+2026-08-25 19:48:33,769:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('info', 1, None)
+2026-08-25 19:48:33,998:INFO:nextcord.client: Cleaning up after 3 tasks.
+2026-08-25 19:48:33,998:INFO:nextcord.client: All tasks finished cancelling.
+2026-08-25 19:48:33,999:INFO:nextcord.client: Closing the event loop.
+2026-08-25 19:48:34,050:ERROR:asyncio: Task exception was never retrieved
+future: <Task finished name='nextcord: on_ready' coro=<Client._run_event() done, defined at C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\site-packages\nextcord\client.py:519> exception=SystemExit('Failed startup sequence')>
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tierlist-bot\tier-test-bot-main\main.py", line 114, in on_ready
+    await setupBot()
+  File "C:\Users\fire1\Downloads\onyx-tierlist-bot\tier-test-bot-main\main.py", line 71, in setupBot
+    raise RuntimeError(
+    ...<2 lines>...
+    )
+RuntimeError: Configured waitlist channel 1535957790244347974 was not found. Check config/config.yml and the bot's server access.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tierlist-bot\tier-test-bot-main\main.py", line 617, in <module>
+    bot.run(os.getenv("TOKEN"))
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\site-packages\nextcord\client.py", line 894, in run
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 713, in run_until_complete
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 684, in run_forever
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 2061, in _run_once
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\asyncio\events.py", line 89, in _run
+  File "C:\Users\fire1\AppData\Local\Programs\Python\Python313\Lib\site-packages\nextcord\client.py", line 527, in _run_event
+  File "C:\Users\fire1\Downloads\onyx-tierlist-bot\tier-test-bot-main\main.py", line 118, in on_ready
+    sys.exit("Failed startup sequence")
+SystemExit: Failed startup sequence

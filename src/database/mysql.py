@@ -43,37 +43,62 @@ async def createTables(cursor):
         restricted BOOLEAN NOT NULL DEFAULT FALSE
     )
     """)
+    await cursor.execute("""
+    CREATE TABLE IF NOT EXISTS user_kits (
+        discordID BIGINT NOT NULL,
+        kit VARCHAR(50) NOT NULL,
+        minecraftUsername VARCHAR(255) NOT NULL,
+        minecraftUUID VARCHAR(255) NOT NULL,
+        tier VARCHAR(50) NOT NULL,
+        lastTest BIGINT NOT NULL,
+        server VARCHAR(255) NOT NULL,
+        region VARCHAR(255) NOT NULL,
+        PRIMARY KEY (discordID, kit),
+        FOREIGN KEY (discordID) REFERENCES users(discordID)
+    )
+    """)
+    await cursor.execute("""
+    INSERT IGNORE INTO user_kits
+      (discordID, kit, minecraftUsername, minecraftUUID, tier, lastTest, server, region)
+    SELECT discordID, kit, minecraftUsername, minecraftUUID, tier, lastTest, server, region
+    FROM users
+    """)
     return True
 
 @withConnection
 async def addUser(cursor, discordID, minecraftUsername, minecraftUUID, tier, lastTest, server, region, kit):
     await cursor.execute("""
-    INSERT INTO users
-      (discordID, minecraftUsername, minecraftUUID, tier, lastTest, server, region, kit, restricted)
+    INSERT IGNORE INTO users
+        (discordID, minecraftUsername, minecraftUUID, tier, lastTest, server, region, kit, restricted)
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """, (discordID, minecraftUsername, minecraftUUID, tier, lastTest, server, region, kit, False))
+    await cursor.execute("""
+    INSERT INTO user_kits
+        (discordID, kit, minecraftUsername, minecraftUUID, tier, lastTest, server, region)
+    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
     ON DUPLICATE KEY UPDATE
       minecraftUsername = VALUES(minecraftUsername),
       minecraftUUID = VALUES(minecraftUUID),
       server = VALUES(server),
       region = VALUES(region),
       kit = VALUES(kit)
-    """, (discordID, minecraftUsername, minecraftUUID, tier, lastTest, server, region, kit, False))
+    """, (discordID, kit, minecraftUsername, minecraftUUID, tier, lastTest, server, region))
     return True
 
 @withConnection
-async def getUserTicket(cursor, discordID):
-    await cursor.execute("SELECT minecraftUsername, tier, server, minecraftUUID, kit FROM users WHERE discordID = %s", (discordID,))
+async def getUserTicket(cursor, discordID, kit):
+    await cursor.execute("SELECT minecraftUsername, tier, server, minecraftUUID, kit, region FROM user_kits WHERE discordID = %s AND kit = %s", (discordID, kit))
     return await cursor.fetchone()
 
 @withConnection
-async def getResultInfo(cursor, discordID):
-    await cursor.execute("SELECT minecraftUsername, tier, region, kit FROM users WHERE discordID = %s", (discordID,))
+async def getResultInfo(cursor, discordID, kit):
+    await cursor.execute("SELECT minecraftUsername, tier, region, kit FROM user_kits WHERE discordID = %s AND kit = %s", (discordID, kit))
     return await cursor.fetchone()
 
 @withConnection
-async def addResult(cursor, discordID, tier):
+async def addResult(cursor, discordID, kit, tier):
     lastTest = int(datetime.datetime.now().timestamp())
-    await cursor.execute("UPDATE users SET tier = %s, lastTest = %s WHERE discordID = %s", (tier, lastTest, discordID))
+    await cursor.execute("UPDATE user_kits SET tier = %s, lastTest = %s WHERE discordID = %s AND kit = %s", (tier, lastTest, discordID, kit))
     return True
 
 @withConnection
@@ -88,23 +113,23 @@ async def isRestricted(cursor, discordID):
     return result[0] if result else False
 
 @withConnection
-async def getLastTest(cursor, discordID):
-    await cursor.execute("SELECT lastTest FROM users WHERE discordID = %s", (discordID,))
+async def getLastTest(cursor, discordID, kit):
+    await cursor.execute("SELECT lastTest FROM user_kits WHERE discordID = %s AND kit = %s", (discordID, kit))
     return await cursor.fetchone()
 
 @withConnection
-async def getTier(cursor, discordID):
-    await cursor.execute("SELECT tier FROM users WHERE discordID = %s", (discordID,))
+async def getTier(cursor, discordID, kit):
+    await cursor.execute("SELECT tier FROM user_kits WHERE discordID = %s AND kit = %s", (discordID, kit))
     return await cursor.fetchone()
 
 @withConnection
-async def updateUsername(cursor, discordID, username, uuid):
-    await cursor.execute("UPDATE users SET minecraftUsername = %s, minecraftUUID = %s WHERE discordID = %s", (username, uuid, discordID))
+async def updateUsername(cursor, discordID, kit, username, uuid):
+    await cursor.execute("UPDATE user_kits SET minecraftUsername = %s, minecraftUUID = %s WHERE discordID = %s AND kit = %s", (username, uuid, discordID, kit))
     return True
 
 @withConnection
-async def updateTier(cursor, discordID, tier):
-    await cursor.execute("UPDATE users SET tier = %s WHERE discordID = %s", (tier, discordID))
+async def updateTier(cursor, discordID, kit, tier):
+    await cursor.execute("UPDATE user_kits SET tier = %s WHERE discordID = %s AND kit = %s", (tier, discordID, kit))
     return True
 
 @withConnection
