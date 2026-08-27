@@ -39,6 +39,9 @@ load_dotenv()
 intents = nextcord.Intents.all()
 bot = commands.Bot(intents=intents)
 queue_message_lock = asyncio.Lock()
+queue_view_registered = False
+waitlist_view_registered = False
+bot_setup_complete = False
 
 
 try:
@@ -97,7 +100,19 @@ async def refresh_queue_message(queue_key):
         queue.addQueueMessageId(queue_key, queue_message.id)
 
 async def setupBot():
+    global bot_setup_complete, queue_view_registered, waitlist_view_registered
+
+    if bot_setup_complete:
+        return
+
     await databaseManager.createTables()
+    if not queue_view_registered:
+        bot.add_view(EnterQueueButton(queue, refresh_queue_message))
+        queue_view_registered = True
+    if not waitlist_view_registered:
+        bot.add_view(WaitlistButton())
+        waitlist_view_registered = True
+
     waitlist_channel_id = channels["enterWaitlist"]
     waitlist_channel = bot.get_channel(waitlist_channel_id)
     if waitlist_channel is None:
@@ -128,6 +143,8 @@ async def setupBot():
         )
         queue.addQueueMessageId(kit, no_queue_message.id)
 
+    bot_setup_complete = True
+
 
 @bot.slash_command(name="waitlist", description="joins the evaluation waitlist")
 async def waitlist(
@@ -146,7 +163,8 @@ async def on_ready():
     print(f"Tier Testing bot has logged online ✅")
     try:
         await setupBot()
-        updateQueue.start()
+        if not updateQueue.is_running():
+            updateQueue.start()
     except Exception as e:
         logging.exception("Failed bot startup sequence: ")
         sys.exit("Failed startup sequence")
@@ -157,47 +175,33 @@ async def updateQueue():
         if not data["open"] or data["queueMessage"] is None:
             continue
 
-        channel = bot.get_channel(data["queueChannel"])
-        if channel is None:
-            logging.warning(
-                "Queue channel %s for kit %s is unavailable.",
-                data["queueChannel"],
-                queue_key,
-            )
-            continue
+        async with queue_message_lock:
+            try:
+                channel = await get_queue_channel(data["queueChannel"])
+                embed_data = queue.makeQueueMessage(queue_key=queue_key)
+                message = await channel.fetch_message(data["queueMessage"])
+                await message.edit(embed=nextcord.Embed.from_dict(embed_data))
 
-        embed_data = queue.makeQueueMessage(queue_key=queue_key)
+            except nextcord.NotFound:
+                logging.warning(
+                    "Queue message for kit %s was deleted. Creating a replacement.",
+                    queue_key,
+                )
 
-        try:
-            message = await channel.fetch_message(data["queueMessage"])
-            await message.edit(
-                embed=nextcord.Embed.from_dict(embed_data)
-            )
+                replacement = await get_queue_channel(data["queueChannel"])
+                queue_message = await replacement.send(
+                    content="@here",
+                    embed=nextcord.Embed.from_dict(queue.makeQueueMessage(queue_key)),
+                    view=EnterQueueButton(queue, refresh_queue_message),
+                    allowed_mentions=nextcord.AllowedMentions(everyone=True),
+                )
+                queue.addQueueMessageId(queue_key, queue_message.id)
 
-        except nextcord.NotFound:
-            logging.warning(
-                "Queue message for kit %s was deleted. Creating a replacement.",
-                queue_key,
-            )
-
-            replacement = await channel.send(
-                embed=nextcord.Embed.from_dict(embed_data),
-                view=EnterQueueButton(queue, refresh_queue_message),
-            )
-
-            queue.addQueueMessageId(queue_key, replacement.id)
-
-        except nextcord.Forbidden:
-            logging.exception(
-                "The bot cannot access the queue channel for kit %s.",
-                queue_key,
-            )
-
-        except nextcord.HTTPException:
-            logging.exception(
-                "Failed to update the queue message for kit %s.",
-                queue_key,
-            )
+            except (nextcord.Forbidden, nextcord.HTTPException, RuntimeError):
+                logging.exception(
+                    "Failed to update the queue message for kit %s.",
+                    queue_key,
+                )
 
 
 

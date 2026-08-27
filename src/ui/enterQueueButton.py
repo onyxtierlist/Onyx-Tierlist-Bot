@@ -1,4 +1,5 @@
 import nextcord
+import logging
 from nextcord import ui
 
 from src.utils.loadConfig import messages
@@ -40,6 +41,7 @@ class EnterQueueButton(ui.View):
                 await self.refresh_queue(queue_kit)
             await interaction.followup.send(content=response, ephemeral=True)
         except Exception:
+            logging.exception("Error in enter queue button:")
             await interaction.followup.send(messages["error"], ephemeral=True)
 
     @nextcord.ui.button(label="Exit Queue", style=nextcord.ButtonStyle.danger, custom_id="leaveQueue")
@@ -56,4 +58,5 @@ class EnterQueueButton(ui.View):
                 await self.refresh_queue(queue_kit)
             await interaction.followup.send(content=response, ephemeral=True)
         except Exception:
+            logging.exception("Error in exit queue button:")
             await interaction.followup.send(messages["error"], ephemeral=True)
