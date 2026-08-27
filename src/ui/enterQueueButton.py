@@ -46,6 +46,11 @@ class EnterQueueButton(ui.View):
     async def exit_queue(self, button: nextcord.ui.Button, interaction: nextcord.Interaction):
         try:
             await interaction.response.defer(ephemeral=True)
+            queue_kit = self.queue.find_by_message(interaction.message.id)
+            if queue_kit is None:
+                await interaction.followup.send("This queue is no longer available.", ephemeral=True)
+                return
+
             response = self.queue.removeUser(interaction.message.id, interaction.user.id)
             if self.refresh_queue and response == messages["leaveQueue"]:
                 await self.refresh_queue(queue_kit)

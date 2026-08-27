@@ -64,13 +64,21 @@ async def notify_queue(channel, embed_data):
         allowed_mentions=nextcord.AllowedMentions(everyone=True),
     )
 
+async def get_queue_channel(channel_id):
+    channel = bot.get_channel(channel_id)
+    if channel is not None:
+        return channel
+
+    try:
+        return await bot.fetch_channel(channel_id)
+    except (nextcord.NotFound, nextcord.Forbidden, nextcord.HTTPException) as error:
+        raise RuntimeError(f"Queue channel {channel_id} is unavailable.") from error
+
 async def refresh_queue_message(queue_key):
     """Replace the active queue message immediately after a queue mutation."""
     async with queue_message_lock:
         data = queue.getqueueraw()[queue_key]
-        channel = bot.get_channel(data["queueChannel"])
-        if channel is None:
-            raise RuntimeError(f"Queue channel for kit '{queue_key}' was not found.")
+        channel = await get_queue_channel(data["queueChannel"])
 
         old_message_id = data["queueMessage"]
         if old_message_id is not None:
@@ -301,10 +309,7 @@ async def openqueue(
                 return
 
             queue_data = queue.getqueueraw()[kit]
-            queue_channel = bot.get_channel(queue_data["queueChannel"])
-
-            if queue_channel is None:
-                raise RuntimeError(f"Queue channel for kit '{kit}' was not found.")
+            queue_channel = await get_queue_channel(queue_data["queueChannel"])
 
             previous_message_id = queue_data["queueMessage"]
             if previous_message_id is not None:
@@ -362,10 +367,7 @@ async def closequeue(
                 return
 
             message_text, embed_data, channel_id, message_id = response
-            queue_channel = bot.get_channel(channel_id)
-
-            if queue_channel is None:
-                raise RuntimeError(f"Queue channel for kit '{kit}' was not found.")
+            queue_channel = await get_queue_channel(channel_id)
 
             if message_id is not None:
                 try:
