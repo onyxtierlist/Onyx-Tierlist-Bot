@@ -4,6 +4,8 @@ import logging
 import time
 import asyncio
 
+from aiohttp import web
+
 import nextcord
 from nextcord.ext import commands, tasks
 from dotenv import load_dotenv
@@ -39,9 +41,55 @@ load_dotenv()
 intents = nextcord.Intents.all()
 bot = commands.Bot(intents=intents)
 queue_message_lock = asyncio.Lock()
-queue_view_registered = False
-waitlist_view_registered = False
-bot_setup_complete = False
+
+TIER_ORDER = ["ht1", "lt1", "ht2", "lt2", "ht3", "lt3", "ht4", "lt4", "ht5", "lt5"]
+TIER_EMOJIS = {
+    "ht1": "👑", "lt1": "💎", "ht2": "🔥", "lt2": "⚡", "ht3": "⭐",
+    "lt3": "✦", "ht4": "◆", "lt4": "◇", "ht5": "●", "lt5": "○",
+}
+api_runner = None
+
+async def api_player(request):
+    username = request.match_info["username"].strip()
+    if not username:
+        return web.json_response({"error": "missing username"}, status=400)
+
+    rows = await databaseManager.getMinecraftPlayerKits(username)
+    tiers = []
+    for row in rows or []:
+        tier = str(row[0]).lower()
+        if tier in TIER_ORDER:
+            tiers.append(tier)
+
+    if not tiers:
+        return web.json_response({
+            "found": False,
+            "highest_tier": "none",
+            "emoji": ""
+        })
+
+    highest = min(tiers, key=TIER_ORDER.index)
+    return web.json_response({
+        "found": True,
+        "highest_tier": highest,
+        "emoji": TIER_EMOJIS[highest]
+    })
+
+async def start_http_api():
+    global api_runner
+    if api_runner is not None:
+        return
+
+    app = web.Application()
+    app.router.add_get("/api/player/{username}", api_player)
+    api_runner = web.AppRunner(app)
+    await api_runner.setup()
+
+    port = int(os.getenv("PORT", os.getenv("API_PORT", "8080")))
+    site = web.TCPSite(api_runner, "0.0.0.0", port)
+    await site.start()
+    logging.info("Onyx Tier API listening on port %s", port)
+
 
 
 try:
@@ -67,52 +115,44 @@ async def notify_queue(channel, embed_data):
         allowed_mentions=nextcord.AllowedMentions(everyone=True),
     )
 
-async def get_queue_channel(channel_id):
-    channel = bot.get_channel(channel_id)
-    if channel is not None:
-        return channel
-
-    try:
-        return await bot.fetch_channel(channel_id)
-    except (nextcord.NotFound, nextcord.Forbidden, nextcord.HTTPException) as error:
-        raise RuntimeError(f"Queue channel {channel_id} is unavailable.") from error
-
-async def refresh_queue_message(queue_key):
-    """Replace the active queue message immediately after a queue mutation."""
+async def update_queue_message(queue_key, embed_data, view):
+    """Keep one message as the current queue message for a kit."""
     async with queue_message_lock:
         data = queue.getqueueraw()[queue_key]
-        channel = await get_queue_channel(data["queueChannel"])
+        channel = bot.get_channel(data["queueChannel"])
+        if channel is None:
+            raise RuntimeError(f"Queue channel for kit '{queue_key}' was not found.")
 
-        old_message_id = data["queueMessage"]
-        if old_message_id is not None:
+        message_id = data["queueMessage"]
+        if message_id is not None:
             try:
-                old_message = await channel.fetch_message(old_message_id)
-                await old_message.delete(reason="Queue updated")
+                message = await channel.fetch_message(message_id)
+                await message.edit(
+                    content="@here",
+                    embed=nextcord.Embed.from_dict(embed_data),
+                    view=view,
+                )
+                return
             except nextcord.NotFound:
                 pass
 
         queue_message = await channel.send(
             content="@here",
-            embed=nextcord.Embed.from_dict(queue.makeQueueMessage(queue_key)),
-            view=EnterQueueButton(queue, refresh_queue_message),
+            embed=nextcord.Embed.from_dict(embed_data),
+            view=view,
             allowed_mentions=nextcord.AllowedMentions(everyone=True),
         )
         queue.addQueueMessageId(queue_key, queue_message.id)
 
+async def refresh_queue_message(queue_key):
+    await update_queue_message(
+        queue_key,
+        queue.makeQueueMessage(queue_key),
+        EnterQueueButton(queue, refresh_queue_message),
+    )
+
 async def setupBot():
-    global bot_setup_complete, queue_view_registered, waitlist_view_registered
-
-    if bot_setup_complete:
-        return
-
     await databaseManager.createTables()
-    if not queue_view_registered:
-        bot.add_view(EnterQueueButton(queue, refresh_queue_message))
-        queue_view_registered = True
-    if not waitlist_view_registered:
-        bot.add_view(WaitlistButton())
-        waitlist_view_registered = True
-
     waitlist_channel_id = channels["enterWaitlist"]
     waitlist_channel = bot.get_channel(waitlist_channel_id)
     if waitlist_channel is None:
@@ -138,12 +178,9 @@ async def setupBot():
                 ) from error
 
         await channel.purge(limit=10, check=is_me)
-        no_queue_message = await channel.send(
-            embed=nextcord.Embed.from_dict(format.formatnoqueue(kit))
+        await channel.send(
+            embed=nextcord.Embed.from_dict(format.formatnoqueue())
         )
-        queue.addQueueMessageId(kit, no_queue_message.id)
-
-    bot_setup_complete = True
 
 
 @bot.slash_command(name="waitlist", description="joins the evaluation waitlist")
@@ -163,6 +200,7 @@ async def on_ready():
     print(f"Tier Testing bot has logged online ✅")
     try:
         await setupBot()
+        await start_http_api()
         if not updateQueue.is_running():
             updateQueue.start()
     except Exception as e:
@@ -175,33 +213,47 @@ async def updateQueue():
         if not data["open"] or data["queueMessage"] is None:
             continue
 
-        async with queue_message_lock:
-            try:
-                channel = await get_queue_channel(data["queueChannel"])
-                embed_data = queue.makeQueueMessage(queue_key=queue_key)
-                message = await channel.fetch_message(data["queueMessage"])
-                await message.edit(embed=nextcord.Embed.from_dict(embed_data))
+        channel = bot.get_channel(data["queueChannel"])
+        if channel is None:
+            logging.warning(
+                "Queue channel %s for kit %s is unavailable.",
+                data["queueChannel"],
+                queue_key,
+            )
+            continue
 
-            except nextcord.NotFound:
-                logging.warning(
-                    "Queue message for kit %s was deleted. Creating a replacement.",
-                    queue_key,
-                )
+        embed_data = queue.makeQueueMessage(queue_key=queue_key)
 
-                replacement = await get_queue_channel(data["queueChannel"])
-                queue_message = await replacement.send(
-                    content="@here",
-                    embed=nextcord.Embed.from_dict(queue.makeQueueMessage(queue_key)),
-                    view=EnterQueueButton(queue, refresh_queue_message),
-                    allowed_mentions=nextcord.AllowedMentions(everyone=True),
-                )
-                queue.addQueueMessageId(queue_key, queue_message.id)
+        try:
+            message = await channel.fetch_message(data["queueMessage"])
+            await message.edit(
+                embed=nextcord.Embed.from_dict(embed_data)
+            )
 
-            except (nextcord.Forbidden, nextcord.HTTPException, RuntimeError):
-                logging.exception(
-                    "Failed to update the queue message for kit %s.",
-                    queue_key,
-                )
+        except nextcord.NotFound:
+            logging.warning(
+                "Queue message for kit %s was deleted. Creating a replacement.",
+                queue_key,
+            )
+
+            replacement = await channel.send(
+                embed=nextcord.Embed.from_dict(embed_data),
+                view=EnterQueueButton(queue, refresh_queue_message),
+            )
+
+            queue.addQueueMessageId(queue_key, replacement.id)
+
+        except nextcord.Forbidden:
+            logging.exception(
+                "The bot cannot access the queue channel for kit %s.",
+                queue_key,
+            )
+
+        except nextcord.HTTPException:
+            logging.exception(
+                "Failed to update the queue message for kit %s.",
+                queue_key,
+            )
 
 
 
@@ -303,33 +355,25 @@ async def openqueue(
             )
             return
 
-        async with queue_message_lock:
-            response = queue.addTester(kit=kit, userID=interaction.user.id)
+        response = queue.addTester(kit=kit, userID=interaction.user.id)
 
-            if response[1] == "":
-                await interaction.followup.send(
-                    content=response[0], ephemeral=True
-                )
-                return
-
-            queue_data = queue.getqueueraw()[kit]
-            queue_channel = await get_queue_channel(queue_data["queueChannel"])
-
-            previous_message_id = queue_data["queueMessage"]
-            if previous_message_id is not None:
-                try:
-                    previous_message = await queue_channel.fetch_message(previous_message_id)
-                    await previous_message.delete(reason="Queue reopened")
-                except nextcord.NotFound:
-                    pass
-
-            queue_message = await queue_channel.send(
-                content="@here",
-                embed=nextcord.Embed.from_dict(response[1]),
-                view=EnterQueueButton(queue, refresh_queue_message),
-                allowed_mentions=nextcord.AllowedMentions(everyone=True),
+        if response[1] == "":
+            await interaction.followup.send(
+                content=response[0], ephemeral=True
             )
-            queue.addQueueMessageId(kit, queue_message.id)
+            return
+
+        queue_data = queue.getqueueraw()[kit]
+        queue_channel = bot.get_channel(queue_data["queueChannel"])
+
+        if queue_channel is None:
+            raise RuntimeError(f"Queue channel for kit '{kit}' was not found.")
+
+        await update_queue_message(
+            kit,
+            response[1],
+            EnterQueueButton(queue, refresh_queue_message),
+        )
 
         await interaction.followup.send(
             content=response[0], ephemeral=True
@@ -358,35 +402,28 @@ async def closequeue(
             )
             return
 
-        async with queue_message_lock:
-            response = queue.removeTester(
-                userID=interaction.user.id,
-                kit=kit,
+        response = queue.removeTester(
+            userID=interaction.user.id,
+            kit=kit,
+        )
+
+        if response == "Testing is closed":
+            await interaction.followup.send(
+                content=response, ephemeral=True
             )
+            return
 
-            if response == "Testing is closed":
-                await interaction.followup.send(
-                    content=response, ephemeral=True
-                )
-                return
+        message_text, embed_data, channel_id, message_id = response
+        queue_channel = bot.get_channel(channel_id)
 
-            message_text, embed_data, channel_id, message_id = response
-            queue_channel = await get_queue_channel(channel_id)
+        if queue_channel is None:
+            raise RuntimeError(f"Queue channel for kit '{kit}' was not found.")
 
-            if message_id is not None:
-                try:
-                    queue_message = await queue_channel.fetch_message(message_id)
-                    await queue_message.delete(reason="Queue updated")
-                except nextcord.NotFound:
-                    pass
-
-            replacement = await queue_channel.send(
-                content="@here",
-                embed=nextcord.Embed.from_dict(embed_data),
-                view=None if message_text == "testing has closed" else EnterQueueButton(queue, refresh_queue_message),
-                allowed_mentions=nextcord.AllowedMentions(everyone=True),
-            )
-            queue.addQueueMessageId(kit, replacement.id)
+        await update_queue_message(
+            kit,
+            embed_data,
+            None if message_text == "testing has closed" else EnterQueueButton(queue, refresh_queue_message),
+        )
 
         await interaction.followup.send(
             content=message_text, ephemeral=True

@@ -1,0 +1,27 @@
+2026-08-27 21:17:49,790:WARNING:nextcord.client: PyNaCl is not installed, voice will NOT be supported
+2026-08-27 21:17:49,794:INFO:nextcord.client: logging in using static token
+2026-08-27 21:17:49,813:INFO:nextcord.http: Allowed 1 rate limits to be garbage collected.
+2026-08-27 21:17:50,715:INFO:nextcord.gateway: Shard ID None has sent the IDENTIFY payload.
+2026-08-27 21:17:51,279:INFO:nextcord.gateway: Shard ID None has connected to Gateway: ["gateway-prd-arm-us-east1-c-6mvs",{"micros":248344,"calls":["id_created",{"micros":1317,"calls":[]},"session_lookup_time",{"micros":252,"calls":[]},"session_lookup_finished",{"micros":16,"calls":[]},"sessions-prd-gcp-us-east1-c-55",{"micros":242281,"calls":["start_session",{"micros":237407,"calls":["prd-rpc-57647868b5-fzwdm",{"micros":60712,"calls":["get_user",{"micros":9395},"get_guilds",{"micros":10271},"send_scheduled_deletion_message",{"micros":20},"guild_join_requests",{"micros":5},"authorized_ip_coro",{"micros":17},"pending_payments",{"micros":2849},"apex_experiments",{"micros":153954},"sessions_experiments",{"micros":10},"played_application_ids",{"micros":9},"linked_users",{"micros":8},"ad_personalization_toggles_disabled",{"micros":6},"regional_feature_config",{"micros":6}]}]},"starting_guild_connect",{"micros":30,"calls":[]},"lobbies_started",{"micros":1,"calls":[]},"presence_started",{"micros":3975,"calls":[]},"guilds_started",{"micros":97,"calls":[]},"guilds_connect",{"micros":3,"calls":[]},"presence_connect",{"micros":745,"calls":[]},"connect_finished",{"micros":756,"calls":[]},"build_ready",{"micros":12,"calls":[]},"clean_ready",{"micros":2,"calls":[]},"optimize_ready",{"micros":0,"calls":[]},"split_ready",{"micros":1,"calls":[]}]}]}] (Session ID: 441298732f7eb85002e0b3b35199742f). Resume URL specified as wss://gateway-us-east1-c.discord.gg
+2026-08-27 21:17:51,669:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('openqueue', 1, None)
+2026-08-27 21:17:52,025:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('passeval', 1, None)
+2026-08-27 21:17:52,387:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('restrict', 1, None)
+2026-08-27 21:17:53,158:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('next', 1, None)
+2026-08-27 21:17:53,528:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('results', 1, None)
+2026-08-27 21:17:53,887:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('info', 1, None)
+2026-08-27 21:18:12,412:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('forceclosetest', 1, None)
+2026-08-27 21:18:12,830:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('remove', 1, None)
+2026-08-27 21:18:13,203:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('updatetier', 1, None)
+2026-08-27 21:18:13,589:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('closequeue', 1, None)
+2026-08-27 21:18:13,952:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('unrestrict', 1, None)
+2026-08-27 21:18:33,388:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('closetest', 1, None)
+2026-08-27 21:18:33,769:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('add', 1, None)
+2026-08-27 21:18:34,129:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('updateusername', 1, None)
+2026-08-27 21:18:34,509:INFO:nextcord.state: nextcord.ConnectionState: Registering command with signature ('waitlist', 1, None)
+2026-08-27 21:18:57,344:ERROR:root: Error in /results command:
+Traceback (most recent call last):
+  File "C:\Users\fire1\Downloads\onyx-tierlist-bot\tier-test-bot-main\main.py", line 238, in results
+    username, oldtier, region, saved_kit = await databaseManager.getResultInfo(user.id, kit)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: cannot unpack non-iterable NoneType object
+2026-08-27 21:22:49,831:INFO:nextcord.http: Allowed 1 rate limits to be garbage collected.
