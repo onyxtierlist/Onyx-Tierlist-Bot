@@ -16,7 +16,6 @@ from src.ui.closeTicketButton import CloseTicketButton
 from src.database import databaseManager
 from src.utils.loadConfig import *
 from src.integrations.website import sync_result
-from src.integrations.minecraft_api import start_server
 listQueueChannel = [
     kit_data["queue_channel"]
     for kit_data in listKits.values()
@@ -41,7 +40,6 @@ load_dotenv()
 intents = nextcord.Intents.all()
 bot = commands.Bot(intents=intents)
 queue_message_lock = asyncio.Lock()
-minecraft_api_runner = None
 
 
 try:
@@ -149,14 +147,10 @@ async def waitlist(
     
 @bot.event
 async def on_ready():
-    global minecraft_api_runner
     print(f"Tier Testing bot has logged online ✅")
     try:
-        if minecraft_api_runner is None:
-            minecraft_api_runner = await start_server()
         await setupBot()
-        if not updateQueue.is_running():
-            updateQueue.start()
+        updateQueue.start()
     except Exception as e:
         logging.exception("Failed bot startup sequence: ")
         sys.exit("Failed startup sequence")

@@ -134,14 +134,3 @@ async def updateRestriction(cursor, discordID, restricted):
 async def getUserInfo(cursor, discordID):
     cursor.execute("SELECT minecraftUsername, tier, lastTest, region, restricted, minecraftUUID, kit FROM users WHERE discordID = ?", (discordID,))
     return cursor.fetchone()
-
-@withConnection
-async def getPlayerTierByMinecraftUsername(cursor, minecraftUsername):
-    cursor.execute("""
-    SELECT minecraftUsername, minecraftUUID, tier, kit, region, lastTest
-    FROM user_kits
-    WHERE LOWER(minecraftUsername) = LOWER(?)
-      AND LOWER(tier) != 'none'
-    """, (minecraftUsername,))
-    rows = cursor.fetchall()
-    return rows

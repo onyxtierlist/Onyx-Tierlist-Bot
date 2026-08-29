@@ -133,3 +133,30 @@ branding:
 ```
 
 Change these values to adjust the bot's embeds without editing Python.
+
+## Website sync (Discord bot → Render website)
+
+The bot can push completed `/results` records directly to the live Onyx website.
+The website remains the source used by the public tier-list pages; the Discord bot's
+own database is not exposed to browsers.
+
+Set these environment variables on the **Railway bot service**:
+
+```text
+WEBSITE_API_URL=https://YOUR-ONYX-WEBSITE.onrender.com/api/integrations/discord/result
+ONYX_INGEST_TOKEN=the_same_long_random_secret_used_on_Render
+```
+
+On the **Render website service**, set:
+
+```text
+ONYX_INGEST_TOKEN=the_exact_same_secret
+```
+
+Do not put `ONYX_INGEST_TOKEN` into frontend JavaScript or commit it to GitHub.
+After changing the Railway variables, redeploy/restart the bot. A successful `/results`
+command will update the matching website player and kit ranking; a temporary website
+failure will be logged but will not fail the Discord result command.
+
+To test the connection, complete a real test and check the bot log for:
+`Synced <player>'s <kit> result to the website.`
