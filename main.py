@@ -3,7 +3,6 @@ import sys
 import logging
 import time
 import asyncio
-import aiohttp
 
 import nextcord
 from nextcord.ext import commands, tasks
@@ -16,6 +15,8 @@ from src.ui.enterQueueButton import EnterQueueButton
 from src.ui.closeTicketButton import CloseTicketButton
 from src.database import databaseManager
 from src.utils.loadConfig import *
+from src.integrations.website import sync_result
+from src.integrations.minecraft_api import start_server
 listQueueChannel = [
     kit_data["queue_channel"]
     for kit_data in listKits.values()
@@ -37,39 +38,10 @@ logging.basicConfig(
 
 load_dotenv()
 
-ONYX_WEBSITE_URL = os.getenv("ONYX_WEBSITE_URL", "").rstrip("/")
-ONYX_INGEST_TOKEN = os.getenv("ONYX_INGEST_TOKEN", "")
-
-async def sync_result_to_website(username, uuid, kit, tier, region, tester):
-    if not ONYX_WEBSITE_URL or not ONYX_INGEST_TOKEN:
-        logging.warning("Website sync disabled: set ONYX_WEBSITE_URL and ONYX_INGEST_TOKEN in .env")
-        return False
-    url = f"{ONYX_WEBSITE_URL}/api/integrations/discord/result"
-    payload = {
-        "name": username,
-        "uuid": uuid or "",
-        "kit": kit,
-        "rank": tier,
-        "region": region or "—",
-        "tester": tester,
-    }
-    try:
-        timeout = aiohttp.ClientTimeout(total=10)
-        async with aiohttp.ClientSession(timeout=timeout) as session:
-            async with session.post(url, json=payload, headers={"X-Onyx-Token": ONYX_INGEST_TOKEN}) as response:
-                body = await response.text()
-                if response.status >= 300:
-                    logging.error("Website sync failed (%s): %s", response.status, body[:500])
-                    return False
-                logging.info("Synced %s %s %s to ONYX website", username, kit, tier)
-                return True
-    except Exception:
-        logging.exception("Website sync request failed")
-        return False
-
 intents = nextcord.Intents.all()
 bot = commands.Bot(intents=intents)
 queue_message_lock = asyncio.Lock()
+minecraft_api_runner = None
 
 
 try:
@@ -177,10 +149,14 @@ async def waitlist(
     
 @bot.event
 async def on_ready():
+    global minecraft_api_runner
     print(f"Tier Testing bot has logged online ✅")
     try:
+        if minecraft_api_runner is None:
+            minecraft_api_runner = await start_server()
         await setupBot()
-        updateQueue.start()
+        if not updateQueue.is_running():
+            updateQueue.start()
     except Exception as e:
         logging.exception("Failed bot startup sequence: ")
         sys.exit("Failed startup sequence")
@@ -279,15 +255,16 @@ async def results(
         embed = nextcord.Embed.from_dict(result_embed_data)
 
         await databaseManager.addResult(discordID=user.id, kit=kit, tier=newtier)
-
-        # Keep the public ONYX website/API in sync with the Discord test result.
-        await sync_result_to_website(
-            username=username,
-            uuid=uuid,
-            kit=saved_kit or kit,
-            tier=newtier,
+        # Keep the public tier list in sync without making the Discord command
+        # depend on the website being available.
+        await sync_result(
+            discord_id=user.id,
+            minecraft_username=username,
+            minecraft_uuid=uuid,
             region=region,
-            tester=str(interaction.user),
+            kit=kit,
+            tier=newtier,
+            tester=interaction.user.name,
         )
 
         member = interaction.guild.get_member(user.id)

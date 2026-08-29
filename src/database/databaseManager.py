@@ -24,4 +24,4 @@ async def isRestriced(discordID): return await db.isRestricted(discordID=discord
 async def updateRestriction(discordID, restricted): return await db.updateRestriction(discordID, restricted)
 async def getUserInfo(discordID): return await db.getUserInfo(discordID)
 
-async def getMinecraftPlayerKits(minecraftUsername): return await db.getMinecraftPlayerKits(minecraftUsername)
+async def getPlayerTierByMinecraftUsername(minecraftUsername): return await db.getPlayerTierByMinecraftUsername(minecraftUsername)
