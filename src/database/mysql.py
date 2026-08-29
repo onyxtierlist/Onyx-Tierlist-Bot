@@ -141,3 +141,8 @@ async def updateRestriction(cursor, discordID, restricted):
 async def getUserInfo(cursor, discordID):
     await cursor.execute("SELECT minecraftUsername, tier, lastTest, region, restricted, minecraftUUID, kit FROM users WHERE discordID = %s", (discordID,))
     return await cursor.fetchone()
+
+@withConnection
+async def getAllResults(cursor):
+    await cursor.execute("SELECT discordID, kit, minecraftUsername, minecraftUUID, tier, lastTest, server, region FROM user_kits")
+    return await cursor.fetchall()

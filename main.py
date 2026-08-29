@@ -297,6 +297,31 @@ async def results(
         logging.exception("Error in /results command:")
         await interaction.followup.send(content=messages["error"], ephemeral=True)
 
+@bot.slash_command(name="syncwebsite", description="sync all saved ONYX tier results to the website")
+async def syncwebsite(interaction: nextcord.Interaction):
+    try:
+        await interaction.response.defer(ephemeral=True)
+        if testerRole not in [role.id for role in interaction.user.roles]:
+            await interaction.followup.send(messages["noPermission"], ephemeral=True)
+            return
+        rows = await databaseManager.getAllResults()
+        sent = skipped = failed = 0
+        for discord_id, kit, username, stored_uuid, tier, _last_test, _server, region in (rows or []):
+            if not username or not tier or str(tier).lower() == "none":
+                skipped += 1
+                continue
+            uuid = str(stored_uuid or "").replace("-", "").strip()
+            if not uuid:
+                uuid = await mojang.getuserid(username=username)
+            if await sync_result(discord_id=discord_id, minecraft_username=username, minecraft_uuid=uuid, region=region, kit=kit, tier=tier, tester=interaction.user.name):
+                sent += 1
+            else:
+                failed += 1
+        await interaction.followup.send(f"Website sync finished: {sent} synced, {skipped} skipped, {failed} failed.", ephemeral=True)
+    except Exception:
+        logging.exception("Error in /syncwebsite command:")
+        await interaction.followup.send(content=messages["error"], ephemeral=True)
+
 @bot.slash_command(name="openqueue", description="opens a kit queue")
 async def openqueue(
     interaction: nextcord.Interaction,

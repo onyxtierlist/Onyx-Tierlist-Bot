@@ -23,3 +23,5 @@ async def updateTier(discordID, kit, tier): return await db.updateTier(discordID
 async def isRestriced(discordID): return await db.isRestricted(discordID=discordID)
 async def updateRestriction(discordID, restricted): return await db.updateRestriction(discordID, restricted)
 async def getUserInfo(discordID): return await db.getUserInfo(discordID)
+
+async def getAllResults(): return await db.getAllResults()
