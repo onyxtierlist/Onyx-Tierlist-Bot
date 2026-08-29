@@ -3,8 +3,7 @@ import sys
 import logging
 import time
 import asyncio
-
-from aiohttp import web
+import aiohttp
 
 import nextcord
 from nextcord.ext import commands, tasks
@@ -38,58 +37,39 @@ logging.basicConfig(
 
 load_dotenv()
 
+ONYX_WEBSITE_URL = os.getenv("ONYX_WEBSITE_URL", "").rstrip("/")
+ONYX_INGEST_TOKEN = os.getenv("ONYX_INGEST_TOKEN", "")
+
+async def sync_result_to_website(username, uuid, kit, tier, region, tester):
+    if not ONYX_WEBSITE_URL or not ONYX_INGEST_TOKEN:
+        logging.warning("Website sync disabled: set ONYX_WEBSITE_URL and ONYX_INGEST_TOKEN in .env")
+        return False
+    url = f"{ONYX_WEBSITE_URL}/api/integrations/discord/result"
+    payload = {
+        "name": username,
+        "uuid": uuid or "",
+        "kit": kit,
+        "rank": tier,
+        "region": region or "—",
+        "tester": tester,
+    }
+    try:
+        timeout = aiohttp.ClientTimeout(total=10)
+        async with aiohttp.ClientSession(timeout=timeout) as session:
+            async with session.post(url, json=payload, headers={"X-Onyx-Token": ONYX_INGEST_TOKEN}) as response:
+                body = await response.text()
+                if response.status >= 300:
+                    logging.error("Website sync failed (%s): %s", response.status, body[:500])
+                    return False
+                logging.info("Synced %s %s %s to ONYX website", username, kit, tier)
+                return True
+    except Exception:
+        logging.exception("Website sync request failed")
+        return False
+
 intents = nextcord.Intents.all()
 bot = commands.Bot(intents=intents)
 queue_message_lock = asyncio.Lock()
-
-TIER_ORDER = ["ht1", "lt1", "ht2", "lt2", "ht3", "lt3", "ht4", "lt4", "ht5", "lt5"]
-TIER_EMOJIS = {
-    "ht1": "👑", "lt1": "💎", "ht2": "🔥", "lt2": "⚡", "ht3": "⭐",
-    "lt3": "✦", "ht4": "◆", "lt4": "◇", "ht5": "●", "lt5": "○",
-}
-api_runner = None
-
-async def api_player(request):
-    username = request.match_info["username"].strip()
-    if not username:
-        return web.json_response({"error": "missing username"}, status=400)
-
-    rows = await databaseManager.getMinecraftPlayerKits(username)
-    tiers = []
-    for row in rows or []:
-        tier = str(row[0]).lower()
-        if tier in TIER_ORDER:
-            tiers.append(tier)
-
-    if not tiers:
-        return web.json_response({
-            "found": False,
-            "highest_tier": "none",
-            "emoji": ""
-        })
-
-    highest = min(tiers, key=TIER_ORDER.index)
-    return web.json_response({
-        "found": True,
-        "highest_tier": highest,
-        "emoji": TIER_EMOJIS[highest]
-    })
-
-async def start_http_api():
-    global api_runner
-    if api_runner is not None:
-        return
-
-    app = web.Application()
-    app.router.add_get("/api/player/{username}", api_player)
-    api_runner = web.AppRunner(app)
-    await api_runner.setup()
-
-    port = int(os.getenv("PORT", os.getenv("API_PORT", "8080")))
-    site = web.TCPSite(api_runner, "0.0.0.0", port)
-    await site.start()
-    logging.info("Onyx Tier API listening on port %s", port)
-
 
 
 try:
@@ -200,9 +180,7 @@ async def on_ready():
     print(f"Tier Testing bot has logged online ✅")
     try:
         await setupBot()
-        await start_http_api()
-        if not updateQueue.is_running():
-            updateQueue.start()
+        updateQueue.start()
     except Exception as e:
         logging.exception("Failed bot startup sequence: ")
         sys.exit("Failed startup sequence")
@@ -301,6 +279,16 @@ async def results(
         embed = nextcord.Embed.from_dict(result_embed_data)
 
         await databaseManager.addResult(discordID=user.id, kit=kit, tier=newtier)
+
+        # Keep the public ONYX website/API in sync with the Discord test result.
+        await sync_result_to_website(
+            username=username,
+            uuid=uuid,
+            kit=saved_kit or kit,
+            tier=newtier,
+            region=region,
+            tester=str(interaction.user),
+        )
 
         member = interaction.guild.get_member(user.id)
         if member is None:
