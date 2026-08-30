@@ -215,7 +215,7 @@ async def results(
     newtier: str = nextcord.SlashOption(
         description="Enter their new tier",
         required=True,
-        choices=listTiers
+        choices=listTierChoices
     ),
     kit: str = nextcord.SlashOption(
         description="Choose the kit the result is for",
@@ -583,7 +583,7 @@ async def updatetier(
     tier: str = nextcord.SlashOption(
         description="Enter their tier",
         required=True,
-        choices=listTiers
+        choices=listTierChoices
     ),
     kit: str = nextcord.SlashOption(
         description="Choose the kit to update",

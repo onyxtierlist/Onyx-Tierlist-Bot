@@ -15,6 +15,8 @@ try:
 
     listTiers = list(botConfig["tiers"].keys())
     listTiers.append("none")
+    # Discord shows clean uppercase tier labels while keeping lowercase values internally.
+    listTierChoices = {tier.upper(): tier for tier in listTiers}
     listHighTiers = botConfig["highTiers"]
 
     listRegions = botConfig["regions"]

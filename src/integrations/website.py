@@ -19,7 +19,7 @@ async def sync_result(*, discord_id, minecraft_username, minecraft_uuid, region,
         "uuid": str(minecraft_uuid or "").replace("-", ""),
         "region": str(region or "—"),
         "kit": str(kit).strip().lower(),
-        "rank": str(tier).strip().lower(),
+        "rank": str(tier).strip().upper(),
         "tester": str(tester or "Discord"),
     }
     if not payload["name"] or payload["rank"] == "none":

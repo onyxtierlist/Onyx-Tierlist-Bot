@@ -54,23 +54,29 @@ def formatqueue(capacity, queue, testerCapacity, testers, kit):
         data["description"] = data["description"].replace("{{KIT}}", kit_label).replace("{{REGION}}", "")
     return data
 
+
+def display_tier(tier):
+    """Return tier codes consistently for user-facing Discord output."""
+    value = str(tier or "").strip()
+    return value.upper() if value.lower() != "none" else "NONE"
+
 def formatticketmessage(username, tier, server, kit, uuid):
     data = _brand(ticketmessage)
     text = json.dumps(data).replace("{{SERVER}}", server).replace("{{USERNAME}}", username)
-    text = text.replace("{{TIER}}", tier).replace("{{KIT}}", listKits[kit].get("label", kit.title()))
+    text = text.replace("{{TIER}}", display_tier(tier)).replace("{{KIT}}", listKits[kit].get("label", kit.title()))
     text = text.replace("{{THUMBNAIL_URL}}", f"https://render.crafty.gg/3d/bust/{uuid}")
     return json.loads(text)
 
 def formathighticketmessage(username, tier, kit, uuid):
     data = _brand(highticketmessage)
-    text = json.dumps(data).replace("{{USERNAME}}", username).replace("{{TIER}}", tier)
+    text = json.dumps(data).replace("{{USERNAME}}", username).replace("{{TIER}}", display_tier(tier))
     text = text.replace("{{KIT}}", listKits[kit].get("label", kit.title()))
     text = text.replace("{{THUMBNAIL_URL}}", f"https://render.crafty.gg/3d/bust/{uuid}")
     return json.loads(text)
 
 def formatinfo(discordName, username, tier, lastTest, region, kit, restricted, uuid):
     data = _brand(infomessage)
-    text = json.dumps(data).replace("{{USERNAME}}", username).replace("{{TIER}}", tier)
+    text = json.dumps(data).replace("{{USERNAME}}", username).replace("{{TIER}}", display_tier(tier))
     text = text.replace("{{REGION}}", region).replace("{{KIT}}", listKits[kit].get("label", kit.title()))
     text = text.replace("{{DISCORDUSER}}", discordName)
     text = text.replace("{{RESTRICTED}}", "true" if restricted == 1 else "false")
