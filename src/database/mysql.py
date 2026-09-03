@@ -63,6 +63,9 @@ async def createTables(cursor):
     SELECT discordID, kit, minecraftUsername, minecraftUUID, tier, lastTest, server, region
     FROM users
     """)
+    # Migrate existing tier values to the canonical UPPERCASE format.
+    await cursor.execute("UPDATE users SET tier = UPPER(tier)")
+    await cursor.execute("UPDATE user_kits SET tier = UPPER(tier)")
     return True
 
 @withConnection
@@ -71,7 +74,7 @@ async def addUser(cursor, discordID, minecraftUsername, minecraftUUID, tier, las
     INSERT IGNORE INTO users
         (discordID, minecraftUsername, minecraftUUID, tier, lastTest, server, region, kit, restricted)
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-    """, (discordID, minecraftUsername, minecraftUUID, tier, lastTest, server, region, kit, False))
+    """, (discordID, minecraftUsername, minecraftUUID, str(tier).strip().upper(), lastTest, server, region, kit, False))
     await cursor.execute("""
     INSERT INTO user_kits
         (discordID, kit, minecraftUsername, minecraftUUID, tier, lastTest, server, region)
@@ -82,7 +85,7 @@ async def addUser(cursor, discordID, minecraftUsername, minecraftUUID, tier, las
       server = VALUES(server),
       region = VALUES(region),
       kit = VALUES(kit)
-    """, (discordID, kit, minecraftUsername, minecraftUUID, tier, lastTest, server, region))
+    """, (discordID, kit, minecraftUsername, minecraftUUID, str(tier).strip().upper(), lastTest, server, region))
     return True
 
 @withConnection
@@ -98,7 +101,7 @@ async def getResultInfo(cursor, discordID, kit):
 @withConnection
 async def addResult(cursor, discordID, kit, tier):
     lastTest = int(datetime.datetime.now().timestamp())
-    await cursor.execute("UPDATE user_kits SET tier = %s, lastTest = %s WHERE discordID = %s AND kit = %s", (tier, lastTest, discordID, kit))
+    await cursor.execute("UPDATE user_kits SET tier = %s, lastTest = %s WHERE discordID = %s AND kit = %s", (str(tier).strip().upper(), lastTest, discordID, kit))
     return True
 
 @withConnection
@@ -129,7 +132,7 @@ async def updateUsername(cursor, discordID, kit, username, uuid):
 
 @withConnection
 async def updateTier(cursor, discordID, kit, tier):
-    await cursor.execute("UPDATE user_kits SET tier = %s WHERE discordID = %s AND kit = %s", (tier, discordID, kit))
+    await cursor.execute("UPDATE user_kits SET tier = %s WHERE discordID = %s AND kit = %s", (str(tier).strip().upper(), discordID, kit))
     return True
 
 @withConnection

@@ -224,6 +224,8 @@ async def results(
     )
     ):
     try:
+        newtier = str(newtier).strip().upper()
+        kit = str(kit).strip().lower()
         await interaction.response.defer(ephemeral=True)
         if testerRole not in [role.id for role in interaction.user.roles]: await interaction.followup.send(messages["noPermission"], ephemeral=True); return
         
@@ -274,22 +276,19 @@ async def results(
         if region_roles_to_remove:
             await member.remove_roles(*region_roles_to_remove, reason="Region roles removed by /results command")
 
-        configured_tier_role_ids = set(listTierRoles.values())
-        for kit_tier_roles in listKitTierRoles.values():
-            configured_tier_role_ids.update(
-                role_id for role_id in kit_tier_roles.values() if role_id
-            )
-        tier_roles_to_remove = [
-            role for role in member.roles if role.id in configured_tier_role_ids
-        ]
-        if tier_roles_to_remove:
-            await member.remove_roles(*tier_roles_to_remove, reason="Old tier roles removed by /results command")
-        
+        # Tier roles are additive. Never remove an existing tier role when a
+        # new result is recorded, so users can keep their tier roles across
+        # gamemodes (and previous tiers) without /results replacing them.
         kit_tier_roles = listKitTierRoles.get(kit, {})
-        if newtier != "none" and newtier in kit_tier_roles:
-            new_tier_role = interaction.guild.get_role(kit_tier_roles[newtier])
-            if new_tier_role:
-                await member.add_roles(new_tier_role, reason="New tier role added by /results command")
+        new_tier_key = str(newtier or "NONE").strip().upper()
+
+        if new_tier_key != "NONE" and new_tier_key in kit_tier_roles:
+            new_tier_role = interaction.guild.get_role(kit_tier_roles[new_tier_key])
+            if new_tier_role and new_tier_role not in member.roles:
+                await member.add_roles(
+                    new_tier_role,
+                    reason="New tier role added by /results command"
+                )
 
         await bot.get_channel(channels["results"]).send(content=f"<@{user.id}>" ,embed=embed)
         await interaction.followup.send(content=messages["resultMessageSent"], ephemeral=True)
@@ -307,7 +306,7 @@ async def syncwebsite(interaction: nextcord.Interaction):
         rows = await databaseManager.getAllResults()
         sent = skipped = failed = 0
         for discord_id, kit, username, stored_uuid, tier, _last_test, _server, region in (rows or []):
-            if not username or not tier or str(tier).lower() == "none":
+            if not username or not tier or str(tier).strip().upper() == "NONE":
                 skipped += 1
                 continue
             uuid = str(stored_uuid or "").replace("-", "").strip()

@@ -22,7 +22,7 @@ async def sync_result(*, discord_id, minecraft_username, minecraft_uuid, region,
         "rank": str(tier).strip().upper(),
         "tester": str(tester or "Discord"),
     }
-    if not payload["name"] or payload["rank"] == "none":
+    if not payload["name"] or payload["rank"] == "NONE":
         return False
 
     timeout = aiohttp.ClientTimeout(total=10)

@@ -13,11 +13,11 @@ try:
     botConfig = config["bot"]
     catagories = botConfig["catagories"]
 
-    listTiers = list(botConfig["tiers"].keys())
-    listTiers.append("none")
-    # Discord shows clean uppercase tier labels while keeping lowercase values internally.
-    listTierChoices = {tier.upper(): tier for tier in listTiers}
-    listHighTiers = botConfig["highTiers"]
+    # Tiers use one canonical format everywhere: UPPERCASE.
+    listTiers = [str(tier).strip().upper() for tier in botConfig["tiers"].keys()]
+    listTiers.append("NONE")
+    listTierChoices = {tier: tier for tier in listTiers}
+    listHighTiers = [str(tier).strip().upper() for tier in botConfig["highTiers"]]
 
     listRegions = botConfig["regions"]
     listRegionsText = list(listRegions.keys())
@@ -36,9 +36,15 @@ try:
     listRegionRolePing = [region["role_ping"] for region in listRegions.values()]
 
     testerRole = botConfig["roles"]["tester"]
-    listTierRoles = dict(botConfig["tiers"])
+    listTierRoles = {
+        str(tier).strip().upper(): role_id
+        for tier, role_id in botConfig["tiers"].items()
+    }
     listKitTierRoles = {
-        kit: dict(kit_data.get("tier_roles") or listTierRoles)
+        kit: {
+            str(tier).strip().upper(): role_id
+            for tier, role_id in (kit_data.get("tier_roles") or listTierRoles).items()
+        }
         for kit, kit_data in listKits.items()
     }
     messages = botConfig["messages"]

@@ -50,7 +50,7 @@ class WaitlistButton(ui.View):
                     )
                     return
 
-                current_tier = (await databaseManager.getTier(interaction.user.id, kit))[0]
+                current_tier = str((await databaseManager.getTier(interaction.user.id, kit))[0] or "NONE").strip().upper()
                 if current_tier in listHighTiers:
                     categoryChannel = interaction.guild.get_channel(catagories["highTests"])
                     channelID = await interaction.guild.create_text_channel(
@@ -117,7 +117,7 @@ class WaitlistForm(ui.Modal):
                 discordID=interaction.user.id,
                 minecraftUsername=self.ign.value.strip(),
                 minecraftUUID=uuid,
-                tier="none",
+                tier="NONE",
                 lastTest=0,
                 server=self.server.value.strip(),
                 region=region,

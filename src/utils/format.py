@@ -28,8 +28,8 @@ def formatresult(discordUsername, testerID, region, kit, minecraftUsername, oldT
         "{{PLAYER}}": discordUsername, "{{TESTER}}": f"<@{testerID}>",
         "{{REGION}}": region, "{[REGION]}": region,
         "{{KIT}}": listKits[kit].get("label", kit.title()),
-        "{{USERNAME}}": minecraftUsername, "{{PREV_TIER}}": oldTier,
-        "{{NEW_TIER}}": newTier, "{{THUMBNAIL_URL}}": f"https://render.crafty.gg/3d/bust/{uuid}"
+        "{{USERNAME}}": minecraftUsername, "{{PREV_TIER}}": display_tier(oldTier),
+        "{{NEW_TIER}}": display_tier(newTier), "{{THUMBNAIL_URL}}": f"https://render.crafty.gg/3d/bust/{uuid}"
     }
     for old, new in replacements.items():
         text = text.replace(old, str(new))

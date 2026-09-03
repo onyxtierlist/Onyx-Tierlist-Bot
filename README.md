@@ -88,18 +88,18 @@ removes that kit's `waitlist_role`, and keeps results for other kits intact. The
 needs Manage Roles, and its role must be above the configured waitlist and tier roles.
 
 To give each gamemode its own tier roles, add a `tier_roles` mapping inside each kit
-in `config/config.yml`, using the same tier names as `bot.tiers`:
+in `config/config.yml`, using the same tier names as `bot.tiers` (uppercase):
 
 ```yaml
 kits:
     sword:
         tier_roles:
-            lt5: 123456789012345678
-            ht5: 123456789012345679
+            LT5: 123456789012345678
+            HT5: 123456789012345679
     axe:
         tier_roles:
-            lt5: 223456789012345678
-            ht5: 223456789012345679
+            LT5: 223456789012345678
+            HT5: 223456789012345679
 ```
 
 Any tier omitted from a kit mapping is not assigned. Kits without `tier_roles` use
