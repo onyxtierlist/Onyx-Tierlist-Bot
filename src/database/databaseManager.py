@@ -25,3 +25,13 @@ async def updateRestriction(discordID, restricted): return await db.updateRestri
 async def getUserInfo(discordID): return await db.getUserInfo(discordID)
 
 async def getAllResults(): return await db.getAllResults()
+
+
+async def createSubtierTable(): return await db.createSubtierTable()
+async def addSubtier(name): return await db.addSubtier(name)
+async def removeSubtier(name): return await db.removeSubtier(name)
+async def getSubtiers(): return await db.getSubtiers()
+async def addSubtierUser(discordID, subtier, minecraftUsername, minecraftUUID, lastTest, server, region): return await db.addSubtierUser(discordID, subtier, minecraftUsername, minecraftUUID, lastTest, server, region)
+async def getSubtierUser(discordID, subtier): return await db.getSubtierUser(discordID, subtier)
+async def getSubtierResultInfo(discordID, subtier): return await db.getSubtierResultInfo(discordID, subtier)
+async def markSubtierTested(discordID, subtier): return await db.markSubtierTested(discordID, subtier)

@@ -13,6 +13,7 @@ from src.tierlistQueue import TierlistQueue
 from src.ui.waitlistButton import WaitlistButton, WaitlistForm
 from src.ui.enterQueueButton import EnterQueueButton
 from src.ui.closeTicketButton import CloseTicketButton
+from src.ui.subtierWaitlistButton import SubtierWaitlistView
 from src.database import databaseManager
 from src.utils.loadConfig import *
 from src.integrations.website import sync_result
@@ -40,6 +41,8 @@ load_dotenv()
 intents = nextcord.Intents.all()
 bot = commands.Bot(intents=intents)
 queue_message_lock = asyncio.Lock()
+subtier_message_lock = asyncio.Lock()
+subtier_message_id = None
 
 
 try:
@@ -101,6 +104,38 @@ async def refresh_queue_message(queue_key):
         EnterQueueButton(queue, refresh_queue_message),
     )
 
+async def refresh_subtier_waitlist_message():
+    """Maintain the separate persistent subtier waitlist panel."""
+    global subtier_message_id
+    async with subtier_message_lock:
+        channel_id = int(channels["enterWaitlist"])
+        channel = bot.get_channel(channel_id)
+        if channel is None:
+            raise RuntimeError(f"Configured waitlist channel {channel_id} was not found.")
+        subtiers = await databaseManager.getSubtiers()
+        embed = nextcord.Embed.from_dict(format.formatsubtierwaitlist(subtiers))
+        if subtier_message_id:
+            try:
+                msg = await channel.fetch_message(subtier_message_id)
+                await msg.edit(embed=embed, view=SubtierWaitlistView(subtiers))
+                return
+            except nextcord.NotFound:
+                subtier_message_id = None
+        # Find an existing bot message with the subtier panel before creating another.
+        try:
+            async for msg in channel.history(limit=50):
+                if msg.author == bot.user and msg.components and any(
+                    getattr(component, "custom_id", "") == "onyx:subtier:select"
+                    for row in msg.components for component in getattr(row, "children", [])
+                ):
+                    subtier_message_id = msg.id
+                    await msg.edit(embed=embed, view=SubtierWaitlistView(subtiers))
+                    return
+        except Exception:
+            pass
+        msg = await channel.send(embed=embed, view=SubtierWaitlistView(subtiers))
+        subtier_message_id = msg.id
+
 async def setupBot():
     await databaseManager.createTables()
     waitlist_channel_id = channels["enterWaitlist"]
@@ -113,6 +148,8 @@ async def setupBot():
 
     await waitlist_channel.purge(limit=10, check=is_me)
     await waitlist_channel.send(embed=nextcord.Embed.from_dict(format.enterwaitlistmessage), view=WaitlistButton())
+    await databaseManager.createSubtierTable()
+    await refresh_subtier_waitlist_message()
     for kit, kit_data in listKits.items():
         queue_channel_id = int(kit_data["queue_channel"])
 
@@ -143,6 +180,102 @@ async def waitlist(
     ),
 ):
     await interaction.response.send_modal(WaitlistForm(kit))
+
+
+@bot.slash_command(name="subtiers", description="Manage ONYX subtiers")
+async def subtiers(interaction: nextcord.Interaction):
+    await interaction.response.send_message("Use /subtiers add, /subtiers remove, /subtiers next, or /subtiers result.", ephemeral=True)
+
+@subtiers.subcommand(name="add", description="Add a new subtier to the subtier waitlist")
+async def subtier_add(interaction: nextcord.Interaction, name: str = nextcord.SlashOption(description="Subtier name", required=True)):
+    try:
+        await interaction.response.defer(ephemeral=True)
+        if testerRole not in [role.id for role in interaction.user.roles]:
+            await interaction.followup.send(messages["noPermission"], ephemeral=True); return
+        name = " ".join(str(name).strip().split())
+        if not name or len(name) > 100:
+            await interaction.followup.send("Subtier name must be between 1 and 100 characters.", ephemeral=True); return
+        await databaseManager.createSubtierTable()
+        added = await databaseManager.addSubtier(name)
+        if not added:
+            await interaction.followup.send(f"Subtier **{name}** already exists.", ephemeral=True); return
+        await refresh_subtier_waitlist_message()
+        await interaction.followup.send(f"Added subtier **{name}** to the subtier waitlist.", ephemeral=True)
+    except Exception:
+        logging.exception("Error in /subtiers add:")
+        await interaction.followup.send(messages["error"], ephemeral=True)
+
+@subtiers.subcommand(name="remove", description="Remove a subtier from the subtier waitlist")
+async def subtier_remove(interaction: nextcord.Interaction, name: str = nextcord.SlashOption(description="Existing subtier name", required=True)):
+    try:
+        await interaction.response.defer(ephemeral=True)
+        if testerRole not in [role.id for role in interaction.user.roles]:
+            await interaction.followup.send(messages["noPermission"], ephemeral=True); return
+        name = " ".join(str(name).strip().split())
+        existing = await databaseManager.getSubtiers()
+        match = next((x for x in existing if x.lower() == name.lower()), None)
+        if match is None:
+            await interaction.followup.send(f"Subtier **{name}** does not exist.", ephemeral=True); return
+        await databaseManager.removeSubtier(match)
+        await refresh_subtier_waitlist_message()
+        await interaction.followup.send(f"Removed subtier **{match}** and its waitlist entries.", ephemeral=True)
+    except Exception:
+        logging.exception("Error in /subtiers remove:")
+        await interaction.followup.send(messages["error"], ephemeral=True)
+
+@subtiers.subcommand(name="next", description="Create the next testing ticket for a subtier")
+async def subtier_next(interaction: nextcord.Interaction, subtier: str = nextcord.SlashOption(description="Subtier to test", required=True)):
+    try:
+        await interaction.response.defer(ephemeral=True)
+        if testerRole not in [role.id for role in interaction.user.roles]:
+            await interaction.followup.send(messages["noPermission"], ephemeral=True); return
+        available = await databaseManager.getSubtiers()
+        match = next((x for x in available if x.lower() == subtier.lower()), None)
+        if match is None:
+            await interaction.followup.send("That subtier does not exist.", ephemeral=True); return
+        # Find the oldest eligible waitlist entry for this subtier.
+        import sqlite3
+        conn = sqlite3.connect("storage/database.db")
+        try:
+            cutoff = int(__import__("time").time()) - int(cooldown) * 60
+            row = conn.execute("SELECT discordID, minecraftUsername, minecraftUUID, server, region FROM subtier_waitlist WHERE subtier = ? AND (lastTest = 0 OR lastTest <= ?) ORDER BY lastTest ASC, discordID LIMIT 1", (match, cutoff)).fetchone()
+        finally:
+            conn.close()
+        if row is None:
+            await interaction.followup.send(f"Nobody is currently waiting for **{match}**.", ephemeral=True); return
+        discord_id, username, uuid, server, region = row
+        user = await interaction.guild.fetch_member(discord_id)
+        category_id = int(listRegions[region]["ticket_catagory"])
+        category = interaction.guild.get_channel(category_id)
+        if category is None:
+            raise RuntimeError(f"Ticket category {category_id} was not found.")
+        channel = await interaction.guild.create_text_channel(name=f"eval-{region}-subtier-{user.name}", category=category)
+        await channel.set_permissions(user, overwrite=nextcord.PermissionOverwrite(view_channel=True, send_messages=True))
+        embed = nextcord.Embed(title=f"ONYX TIERS • SUBTIER TEST", description=f"**Player:** {username}\n**Subtier:** {match}\n**Region:** {region}\n**Server:** {server}\n\nUse `/subtiers result` after the test is completed.", color=branding["color"])
+        await channel.send(content=f"<@{discord_id}>", embed=embed)
+        await interaction.followup.send(f"Subtier test ticket created: <#{channel.id}>", ephemeral=True)
+    except Exception:
+        logging.exception("Error in /subtiers next:")
+        await interaction.followup.send(messages["error"], ephemeral=True)
+
+@subtiers.subcommand(name="result", description="Mark a subtier test as completed")
+async def subtier_result(interaction: nextcord.Interaction, user: nextcord.User = nextcord.SlashOption(description="Tested player", required=True), subtier: str = nextcord.SlashOption(description="Existing subtier", required=True)):
+    try:
+        await interaction.response.defer(ephemeral=True)
+        if testerRole not in [role.id for role in interaction.user.roles]:
+            await interaction.followup.send(messages["noPermission"], ephemeral=True); return
+        available = await databaseManager.getSubtiers()
+        match = next((x for x in available if x.lower() == subtier.lower()), None)
+        if match is None:
+            await interaction.followup.send("That subtier does not exist.", ephemeral=True); return
+        entry = await databaseManager.getSubtierResultInfo(user.id, match)
+        if entry is None:
+            await interaction.followup.send("That player is not registered for this subtier.", ephemeral=True); return
+        await databaseManager.markSubtierTested(user.id, match)
+        await interaction.followup.send(f"**{user.display_name}** has been marked tested for **{match}**. This does not change main tiers, main tier roles, or the website.", ephemeral=True)
+    except Exception:
+        logging.exception("Error in /subtiers result:")
+        await interaction.followup.send(messages["error"], ephemeral=True)
     
     
 @bot.event

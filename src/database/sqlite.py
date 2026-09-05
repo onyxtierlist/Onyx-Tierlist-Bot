@@ -142,3 +142,72 @@ async def getUserInfo(cursor, discordID):
 async def getAllResults(cursor):
     cursor.execute("SELECT discordID, kit, minecraftUsername, minecraftUUID, tier, lastTest, server, region FROM user_kits")
     return cursor.fetchall()
+
+@withConnection
+async def createSubtierTable(cursor):
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS subtiers (
+        name TEXT PRIMARY KEY,
+        createdAt INTEGER NOT NULL
+    )""")
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS subtier_waitlist (
+        discordID INTEGER NOT NULL,
+        subtier TEXT NOT NULL,
+        minecraftUsername TEXT NOT NULL,
+        minecraftUUID TEXT NOT NULL,
+        lastTest INTEGER NOT NULL DEFAULT 0,
+        server TEXT NOT NULL,
+        region TEXT NOT NULL,
+        PRIMARY KEY (discordID, subtier)
+    )""")
+    return True
+
+@withConnection
+async def addSubtier(cursor, name):
+    import time
+    name = str(name).strip()
+    cursor.execute("INSERT OR IGNORE INTO subtiers (name, createdAt) VALUES (?, ?)", (name, int(time.time())))
+    return cursor.rowcount > 0
+
+@withConnection
+async def removeSubtier(cursor, name):
+    name = str(name).strip()
+    cursor.execute("DELETE FROM subtiers WHERE name = ?", (name,))
+    cursor.execute("DELETE FROM subtier_waitlist WHERE subtier = ?", (name,))
+    return cursor.rowcount >= 0
+
+@withConnection
+async def getSubtiers(cursor):
+    cursor.execute("SELECT name FROM subtiers ORDER BY name COLLATE NOCASE")
+    return [row[0] for row in cursor.fetchall()]
+
+@withConnection
+async def addSubtierUser(cursor, discordID, subtier, minecraftUsername, minecraftUUID, lastTest, server, region):
+    cursor.execute("""
+    INSERT INTO subtier_waitlist
+      (discordID, subtier, minecraftUsername, minecraftUUID, lastTest, server, region)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(discordID, subtier) DO UPDATE SET
+      minecraftUsername=excluded.minecraftUsername,
+      minecraftUUID=excluded.minecraftUUID,
+      server=excluded.server,
+      region=excluded.region
+    """, (discordID, subtier, minecraftUsername, minecraftUUID, lastTest, server, region))
+    return True
+
+@withConnection
+async def getSubtierUser(cursor, discordID, subtier):
+    cursor.execute("SELECT minecraftUsername, minecraftUUID, lastTest, server, region, subtier FROM subtier_waitlist WHERE discordID = ? AND subtier = ?", (discordID, subtier))
+    return cursor.fetchone()
+
+@withConnection
+async def getSubtierResultInfo(cursor, discordID, subtier):
+    cursor.execute("SELECT minecraftUsername, minecraftUUID, lastTest, server, region, subtier FROM subtier_waitlist WHERE discordID = ? AND subtier = ?", (discordID, subtier))
+    return cursor.fetchone()
+
+@withConnection
+async def markSubtierTested(cursor, discordID, subtier):
+    import time
+    cursor.execute("UPDATE subtier_waitlist SET lastTest = ? WHERE discordID = ? AND subtier = ?", (int(time.time()), discordID, subtier))
+    return cursor.rowcount > 0

@@ -83,3 +83,13 @@ def formatinfo(discordName, username, tier, lastTest, region, kit, restricted, u
     text = text.replace("{{LAST}}", "Not tested before" if lastTest == 0 else f"<t:{lastTest}:f>")
     text = text.replace("{{THUMBNAIL_URL}}", f"https://render.crafty.gg/3d/bust/{uuid}")
     return json.loads(text)
+
+subtierwaitlistmessage = _load("subtierwaitlist.json")
+
+def formatsubtierwaitlist(subtiers):
+    data = _brand(subtierwaitlistmessage)
+    if subtiers:
+        data["description"] = data.get("description", "") + "\n\n**Available subtiers:** " + ", ".join(f"`{x}`" for x in subtiers)
+    else:
+        data["description"] = data.get("description", "") + "\n\n**No subtiers have been added yet.**"
+    return data
