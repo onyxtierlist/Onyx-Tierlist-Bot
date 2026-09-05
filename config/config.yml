@@ -172,7 +172,7 @@ bot:
         results: 1535957789925445647
         enterWaitlist: 1535957790244347974
         # Separate channel for the SUBTIERS WAITLIST panel. Replace 0 with your channel ID.
-        subtierWaitlist: 0
+        subtierWaitlist: 1545703618056028181
 
     catagories:
         highTests: 1535957790785540106
