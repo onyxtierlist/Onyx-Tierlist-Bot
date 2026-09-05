@@ -108,7 +108,7 @@ async def refresh_subtier_waitlist_message():
     """Maintain the separate persistent subtier waitlist panel."""
     global subtier_message_id
     async with subtier_message_lock:
-        channel_id = int(channels["enterWaitlist"])
+        channel_id = int(channels["subtierWaitlist"])
         channel = bot.get_channel(channel_id)
         if channel is None:
             raise RuntimeError(f"Configured waitlist channel {channel_id} was not found.")
